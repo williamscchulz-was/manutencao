@@ -1585,7 +1585,7 @@ window._resetHistorico = () => {
 </script>
 
 <script>
-const VERSION    = 'v2.1';
+const VERSION    = 'v2.2';
 // Usuários do sistema
 const USERS = {
   'admin':     { senha: 'admin',  isAdmin: true,  nome: 'Admin'     },
@@ -2913,18 +2913,17 @@ const manifestURL = URL.createObjectURL(blob);
 document.getElementById('pwa-manifest').setAttribute('href', manifestURL);
 
 
-// ── SERVICE WORKER (cache + PWA) ─────────────────────────
+// ── SERVICE WORKER (Firebase Messaging — arquivo externo) ──
 if ('serviceWorker' in navigator) {
-  const swCode = [
-    "const CACHE = 'fiobras-v2.0';",
-    "self.addEventListener('install', () => self.skipWaiting());",
-    "self.addEventListener('activate', () => self.clients.claim());",
-    "self.addEventListener('fetch', e => { if (e.request.method !== 'GET') return; e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });"
-  ].join('\n');
-  const swBlob = new Blob([swCode], { type: 'application/javascript' });
-  navigator.serviceWorker.register(URL.createObjectURL(swBlob), { scope: './' })
-    .then(reg => { window._swRegistration = reg; })
-    .catch(e  => console.warn('SW:', e));
+  // Registra o SW externo que permite FCM em background
+  navigator.serviceWorker.register('./firebase-messaging-sw.js', { scope: './' })
+    .then(reg => {
+      window._swRegistration = reg;
+      console.log('SW FCM registrado:', reg.scope);
+    })
+    .catch(e => {
+      console.warn('SW falhou (normal em localhost):', e.message);
+    });
 }
 
 async function initFCMToken() {
