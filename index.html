@@ -1352,24 +1352,33 @@ function mostrarNotif(titulo, corpo, tag) {
   } catch(e) { console.warn('Notif error:', e); }
 }
 
-// Detecta cards novos de urgência alta — compara com snapshot anterior
-let prevCardIds = new Set();
+// Detecta cards novos de urgência alta
+// prevCardIds começa como null — primeira carga não notifica, só inicializa
+let prevCardIds = null;
 
 function checkNotifNovosCards(cards) {
   const altaCards = cards.filter(c => c.urg === 'alta' && c.col !== 'done');
+  const currentIds = new Set(cards.map(c => c._key));
+
+  if (prevCardIds === null) {
+    // Primeira carga: apenas inicializa, não notifica
+    prevCardIds = currentIds;
+    return;
+  }
+
+  // Notifica apenas cards que não existiam antes
   altaCards.forEach(c => {
     if (!prevCardIds.has(c._key)) {
-      // Card novo de urgência alta
       const setor = c.setor === 'eletrica' ? '⚡ Elétrica' : '⚙️ Mecânica';
       mostrarNotif(
-        '🔴 Urgência Alta — ' + setor,
+        '🔴 Nova demanda urgente — ' + setor,
         (c.equip ? c.equip + ': ' : '') + c.titulo,
         'alta-' + c._key
       );
     }
   });
-  // Atualiza o set com todos os cards atuais
-  prevCardIds = new Set(cards.map(c => c._key));
+
+  prevCardIds = currentIds;
 }
 
 // ── MODAL UTIL ────────────────────────────────────────
