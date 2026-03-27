@@ -854,6 +854,7 @@ window._fbUpdateCard = (key, data) => update(ref(db, `manutencao/kanban/${key}`)
 window._fbRemoveCard = (key) => remove(ref(db, `manutencao/kanban/${key}`));
 window._fbPushPrev = (p) => push(prevRef, p);
 window._fbUpdatePrev = (key, data) => update(ref(db, `manutencao/preventivas/${key}`), data);
+window._fbRemovePrev = (key) => remove(ref(db, `manutencao/preventivas/${key}`));
 window._fbPushPeca = (p) => push(pecasRef, p);
 window._fbPushHist = (h) => push(historicoRef, h);
 window._fbReady = true;
@@ -1249,30 +1250,69 @@ function renderPreventiva() {
       <td>${fmtDt(p.ultima)}</td>
       <td>${proxima.toLocaleDateString('pt-BR')}</td>
       <td><span class="badge ${bCls}">${bTxt}</span></td>
-      <td><button class="btn-secondary" style="padding:5px 11px;font-size:0.6rem" onclick="executarPreventiva('${p._key||p.id}')">✓ Executar</button></td>
+      <td style="display:flex;gap:5px;align-items:center">
+        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="executarPreventiva('${p._key||p.id}')">✓</button>
+        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="abrirModalPreventiva('${p._key||p.id}')">✏️</button>
+        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarPreventiva('${p._key||p.id}')">✕</button>
+      </td>
     </tr>`;
   }).join('');
 }
-function abrirModalPreventiva() {
-  document.getElementById('pv-ultima').value = todayStr();
-  document.getElementById('modal-preventiva').classList.add('open');
+let editandoPrevKey = null;
+
+function abrirModalPreventiva(key) {
+  editandoPrevKey = key || null;
+  const modal = document.getElementById('modal-preventiva');
+  const titulo = modal.querySelector('.modal-title');
+
+  if (key) {
+    // Modo edição — preenche campos
+    const p = state.preventivas.find(x => (x._key || x.id) === key);
+    if (!p) return;
+    titulo.textContent = 'Editar Preventiva';
+    document.getElementById('pv-tarefa').value = p.tarefa || '';
+    document.getElementById('pv-equip').value  = p.equip  || '';
+    document.getElementById('pv-setor').value  = p.setor  || 'mecanica';
+    document.getElementById('pv-freq').value   = p.freq   || 30;
+    document.getElementById('pv-ultima').value = p.ultima || todayStr();
+    document.getElementById('pv-resp').value   = p.resp   || '';
+    document.getElementById('pv-obs').value    = p.obs    || '';
+    document.getElementById('pv-urg').value    = p.urg    || 'prev';
+  } else {
+    // Modo novo — limpa campos
+    titulo.textContent = 'Nova Preventiva';
+    ['pv-tarefa','pv-equip','pv-resp','pv-obs'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('pv-setor').value = 'mecanica';
+    document.getElementById('pv-freq').value  = 30;
+    document.getElementById('pv-ultima').value = todayStr();
+    document.getElementById('pv-urg').value   = 'prev';
+  }
+  modal.classList.add('open');
 }
 function salvarPreventiva() {
   const tarefa = document.getElementById('pv-tarefa').value.trim();
   if (!tarefa) return;
   const pv = {
     tarefa,
-    equip: document.getElementById('pv-equip').value.trim(),
-    setor: document.getElementById('pv-setor').value,
-    freq:  parseInt(document.getElementById('pv-freq').value),
+    equip:  document.getElementById('pv-equip').value.trim(),
+    setor:  document.getElementById('pv-setor').value,
+    freq:   parseInt(document.getElementById('pv-freq').value),
     ultima: document.getElementById('pv-ultima').value,
-    resp:  document.getElementById('pv-resp').value.trim(),
-    obs:   document.getElementById('pv-obs').value.trim(),
-    urg:   document.getElementById('pv-urg').value,
+    resp:   document.getElementById('pv-resp').value.trim(),
+    obs:    document.getElementById('pv-obs').value.trim(),
+    urg:    document.getElementById('pv-urg').value,
   };
-  window._fbPushPrev(pv);
+  if (editandoPrevKey) {
+    window._fbUpdatePrev(editandoPrevKey, pv);
+  } else {
+    window._fbPushPrev(pv);
+  }
+  editandoPrevKey = null;
   fecharModal('modal-preventiva');
-  ['pv-tarefa','pv-equip','pv-resp','pv-obs'].forEach(id => document.getElementById(id).value = '');
+}
+function deletarPreventiva(key) {
+  if (!confirm('Remover esta preventiva?')) return;
+  if (window._fbRemovePrev) window._fbRemovePrev(key);
 }
 function executarPreventiva(key) {
   window._fbUpdatePrev(key, { ultima: todayStr() });
@@ -1469,7 +1509,7 @@ Object.assign(window, {
   moverCard, deletarCard,
   abrirModalDemanda, selUrg, enviarDemanda,
   abrirModalCardAdmin, salvarCardAdmin,
-  abrirModalPreventiva, salvarPreventiva, executarPreventiva,
+  abrirModalPreventiva, salvarPreventiva, executarPreventiva, deletarPreventiva,
   fecharModal,
   renderCalendario, initNotificacoes, mostrarNotif,
   abrirModalMover, confirmarMove, cancelarMove, setKFilterSel,
