@@ -141,6 +141,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Poppins', sans-s
   scrollbar-width: none;
 }
 .tabs::-webkit-scrollbar { display: none; }
+.tabs { -webkit-overflow-scrolling: touch; }
 .tab-btn {
   padding: 13px 18px;
   background: none;
@@ -165,7 +166,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 .panel.active { display: block; }
 
 /* ── KANBAN ── */
-.kanban-wrap { padding: 24px; overflow-x: hidden; }
+.kanban-wrap { padding: 24px; overflow-x: auto; }
 .kanban-toolbar {
   display: flex;
   align-items: center;
@@ -192,34 +193,11 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 .kanban-board {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(260px, 1fr));
   gap: 12px;
   width: 100%;
 }
-@media(max-width: 700px) {
-  .kanban-board {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .kanban-col {
-    min-height: auto;
-  }
-  .kanban-wrap {
-    padding: 14px;
-  }
-  .kanban-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  .kanban-toolbar > div:last-child {
-    justify-content: stretch;
-  }
-  .kanban-toolbar .btn-primary {
-    flex: 1;
-    justify-content: center;
-  }
-}
+
 
 .kanban-col {
   background: var(--col-bg);
@@ -331,7 +309,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 /* ── STATS ── */
 .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
-@media(max-width:700px) { .stats-row { grid-template-columns: repeat(2,1fr); } }
+
 .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 11px; padding: 16px 18px; }
 .stat-label { font-size: 0.57rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .stat-value { font-family: 'DM Mono', monospace; font-size: 1.9rem; font-weight: 500; line-height: 1; }
@@ -507,6 +485,140 @@ body.is-admin .tab-btn.admin-only { display: block; }
 .maquina-prev-item:last-child { border-bottom: none; }
 .maquina-actions { display: flex; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--border); }
 
+
+/* ══════════════════════════════════════════
+   MOBILE FIRST — completo
+══════════════════════════════════════════ */
+@media(max-width: 768px) {
+
+  /* Header */
+  .header {
+    padding: 10px 14px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .logo { font-size: 1.1rem; }
+  #header-stats {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    padding: 4px 0 6px;
+    gap: 16px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .user-badge { padding: 4px 10px; }
+  .user-badge #h-nome { font-size: 0.65rem; }
+  .btn-logout { padding: 5px 10px; font-size: 0.58rem; }
+  #btn-instalar { padding: 5px 10px; font-size: 0.58rem; }
+
+  /* Tabs */
+  .tabs { padding: 0 8px; }
+  .tab-btn { padding: 11px 12px; font-size: 0.58rem; letter-spacing: 0.5px; }
+
+  /* Container */
+  .container { padding: 16px 12px 80px; }
+
+  /* Kanban */
+  .kanban-wrap { padding: 12px; }
+  .kanban-toolbar {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .kanban-toolbar > div:first-child { width: 100%; }
+  .kanban-toolbar > div:first-child select { width: 100%; font-size: 0.8rem; padding: 10px 12px; }
+  .kanban-toolbar > div:last-child { width: 100%; }
+  .kanban-toolbar .btn-primary { width: 100%; justify-content: center; padding: 12px; font-size: 0.75rem; }
+
+  .kanban-board {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .kanban-col {
+    min-height: auto;
+    border-radius: 10px;
+  }
+  .col-header { padding-bottom: 8px; margin-bottom: 10px; }
+  .col-title { font-size: 0.6rem; }
+
+  /* Cards */
+  .kanban-card { padding: 12px 13px; border-radius: 9px; }
+  .card-title { font-size: 0.82rem; }
+  .card-desc { font-size: 0.7rem; }
+  .badge { font-size: 0.55rem; padding: 3px 8px; }
+  .card-footer { padding-top: 7px; }
+  .card-equip { font-size: 0.6rem; }
+  .card-meta { font-size: 0.56rem; }
+
+  /* Seção preventiva */
+  .sec-header { flex-wrap: wrap; gap: 10px; }
+  .btn-primary { padding: 10px 16px; font-size: 0.68rem; }
+  .btn-secondary { padding: 8px 12px; font-size: 0.62rem; }
+
+  /* Tabela preventiva — scroll horizontal */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px; }
+  .data-table { min-width: 560px; }
+  .data-table th { padding: 9px 12px; font-size: 0.54rem; }
+  .data-table td { padding: 9px 12px; font-size: 0.72rem; }
+
+  /* Calendário */
+  .cal-wrap { margin-top: 20px; }
+  .cal-month-title { font-size: 0.6rem; margin-bottom: 8px; }
+  .cal-grid { gap: 2px; margin-bottom: 16px; }
+  .cal-dow { font-size: 0.48rem; padding: 4px 0 6px; }
+  .cal-day { min-height: 44px; padding: 4px 3px; border-radius: 6px; }
+  .cal-day-num { font-size: 0.6rem; margin-bottom: 2px; }
+  .cal-event { font-size: 0.5rem; padding: 1px 3px; border-radius: 3px; margin-bottom: 1px; }
+  .cal-legend { gap: 10px; margin-bottom: 12px; }
+  .cal-legend-item { font-size: 0.58rem; gap: 4px; }
+  .cal-legend-dot { width: 8px; height: 8px; }
+
+  /* Máquinas grid */
+  .maquinas-grid { grid-template-columns: 1fr; gap: 10px; }
+  .maquina-top { padding: 12px 14px; }
+  .maquina-nome { font-size: 0.8rem; }
+  .maquina-body { padding: 10px 14px; }
+  .maquina-actions { padding: 8px 14px; }
+
+  /* Timeline histórico */
+  .timeline { padding-left: 22px; }
+  .timeline-item::before { left: -18px; width: 8px; height: 8px; }
+  .tl-card { padding: 11px 14px; }
+  .tl-title { font-size: 0.74rem; }
+  .tl-date { font-size: 0.58rem; }
+  .tl-meta { gap: 6px; }
+  .tl-tag { font-size: 0.55rem; padding: 2px 7px; }
+
+  /* Modais */
+  .modal { padding: 20px 16px; border-radius: 12px; max-height: 88vh; }
+  .modal-title { font-size: 0.62rem; margin-bottom: 16px; }
+  .modal-row { grid-template-columns: 1fr; gap: 10px; }
+  .field label { font-size: 0.55rem; }
+  .field input, .field select, .field textarea { font-size: 0.82rem; padding: 10px 12px; }
+  .modal-btn { padding: 11px; font-size: 0.65rem; }
+
+  /* Demanda modal */
+  .urg-btn { font-size: 0.68rem; padding: 11px 6px; }
+
+  /* Login */
+  .login-box { padding: 28px 20px; border-radius: 14px; }
+  .login-logo { font-size: 1.6rem; }
+  .login-field input { font-size: 0.9rem; padding: 12px 14px; }
+  .login-btn { padding: 13px; font-size: 0.78rem; }
+
+  /* Stats cards */
+  .stats-row { grid-template-columns: repeat(2,1fr); gap: 8px; }
+  .stat-value { font-size: 1.6rem; }
+}
+
+/* Telas muito pequenas */
+@media(max-width: 380px) {
+  .tab-btn { padding: 10px 9px; font-size: 0.54rem; }
+  .kanban-card { padding: 10px 11px; }
+  .card-title { font-size: 0.78rem; }
+}
+
 </style>
 
   <meta name="theme-color" content="#0076BE">
@@ -545,7 +657,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
   <div class="header">
     <div class="logo">Fio<em>bras</em> <span style="font-size:0.62rem;font-weight:400;color:rgba(255,255,255,0.6);margin-left:6px;letter-spacing:1px;text-transform:uppercase">Manutenção</span><span id="app-version" style="font-family:'DM Mono',monospace;font-size:0.55rem;font-weight:400;color:rgba(255,255,255,0.35);margin-left:8px;letter-spacing:0.5px"></span></div>
-    <div id="header-stats" style="display:flex;align-items:center;gap:20px;opacity:0;transition:opacity 0.3s">
+    <div id="header-stats" style="display:flex;align-items:center;gap:16px;opacity:0;transition:opacity 0.3s">
       <div style="text-align:center">
         <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;color:#fff;line-height:1" id="hs-total">0</div>
         <div style="font-size:0.5rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.55)">Total</div>
@@ -991,7 +1103,7 @@ window._resetHistorico = () => {
 </script>
 
 <script>
-const VERSION    = 'v0.4';
+const VERSION    = 'v0.5';
 const ADMIN_PASS  = 'admin';
 const USER_PASS   = 'user';
 const JOACIR_PASS = '2725';
