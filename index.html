@@ -544,7 +544,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 <div id="app" style="display:none">
 
   <div class="header">
-    <div class="logo">Fio<em>bras</em> <span style="font-size:0.62rem;font-weight:400;color:rgba(255,255,255,0.6);margin-left:6px;letter-spacing:1px;text-transform:uppercase">Manutenção</span></div>
+    <div class="logo">Fio<em>bras</em> <span style="font-size:0.62rem;font-weight:400;color:rgba(255,255,255,0.6);margin-left:6px;letter-spacing:1px;text-transform:uppercase">Manutenção</span><span id="app-version" style="font-family:'DM Mono',monospace;font-size:0.55rem;font-weight:400;color:rgba(255,255,255,0.35);margin-left:8px;letter-spacing:0.5px"></span></div>
     <div id="header-stats" style="display:flex;align-items:center;gap:20px;opacity:0;transition:opacity 0.3s">
       <div style="text-align:center">
         <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;color:#fff;line-height:1" id="hs-total">0</div>
@@ -834,21 +834,35 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 <!-- PREVENTIVA -->
 <div class="modal-bg" id="modal-preventiva">
-  <div class="modal">
-    <div class="modal-title">Nova Tarefa Preventiva</div>
+  <div class="modal" style="width:520px">
+    <div class="modal-title" id="pv-modal-title">Nova Preventiva</div>
     <div class="modal-grid">
-      <div class="field"><label>Tarefa</label><input id="pv-tarefa" placeholder="Ex: Troca de óleo"></div>
       <div class="modal-row">
-        <div class="field"><label>Equipamento</label><input id="pv-equip" placeholder="Nome do equipamento"></div>
+        <div class="field">
+          <label>Máquina</label>
+          <select id="pv-maquina" onchange="onPvMaquinaChange()">
+            <option value="">Selecionar máquina...</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tarefa preventiva</label>
+          <select id="pv-tarefa-sel" onchange="onPvTarefaChange()">
+            <option value="">Selecionar tarefa...</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="pv-tarefa-custom-wrap" style="display:none">
+        <label>Descrição da tarefa</label>
+        <input id="pv-tarefa" placeholder="Ex: Troca de óleo">
+      </div>
+      <div class="modal-row">
         <div class="field"><label>Setor</label>
           <select id="pv-setor">
             <option value="mecanica">Mecânica</option>
             <option value="eletrica">Elétrica</option>
           </select>
         </div>
-      </div>
-      <div class="modal-row">
-        <div class="field"><label>Frequência (dias)</label>
+        <div class="field"><label>Frequência</label>
           <select id="pv-freq">
             <option value="7">Semanal (7d)</option>
             <option value="15">Quinzenal (15d)</option>
@@ -858,15 +872,19 @@ body.is-admin .tab-btn.admin-only { display: block; }
             <option value="365">Anual (365d)</option>
           </select>
         </div>
-        <div class="field"><label>Última execução</label><input id="pv-ultima" type="date"></div>
       </div>
       <div class="modal-row">
-        <div class="field"><label>Responsável</label><input id="pv-resp" placeholder="Nome do técnico"></div>
-        <div class="field"><label>Urgência quando vencer</label>
-          <select id="pv-urg">
-            <option value="prev">🔵 Preventiva</option>
-            <option value="alta">🔴 Alta</option>
-            <option value="media">🟠 Média</option>
+        <div class="field"><label>Última execução</label><input id="pv-ultima" type="date"></div>
+        <div class="field"><label>Responsável</label>
+          <select id="pv-resp">
+            <option value="">Selecionar...</option>
+            <option>Joacir</option>
+            <option>Eugênio</option>
+            <option>Hernandes</option>
+            <option>Vorlei</option>
+            <option>Pedro</option>
+            <option>Ivonei</option>
+            <option>Roland</option>
           </select>
         </div>
       </div>
@@ -973,6 +991,7 @@ window._resetHistorico = () => {
 </script>
 
 <script>
+const VERSION    = 'v0.2';
 const ADMIN_PASS = 'admin';
 const USER_PASS  = 'user';
 
@@ -1012,6 +1031,8 @@ function doLogin() {
   document.getElementById('h-nome').textContent = nome;
   document.getElementById('h-role').textContent = isAdmin ? 'Administrador' : 'Usuário';
   if (isAdmin) document.body.classList.add('is-admin');
+  const vEl = document.getElementById('app-version');
+  if (vEl) vEl.textContent = VERSION;
   // Salva credenciais se usuário marcou "lembrar"
   try {
     const lembrar = document.getElementById('lembrar-check');
