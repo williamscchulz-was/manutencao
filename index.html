@@ -752,7 +752,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 /* Mobile: esconder tabs do topo, mostrar bottom nav */
 @media(max-width: 768px) {
   .tabs { display: none !important; }
-  #bottom-nav { display: flex !important; }
+  body.logged-in #bottom-nav { display: flex !important; }
   .container { padding-bottom: 100px !important; }
   .kanban-wrap { padding-bottom: 100px !important; }
 }
@@ -1188,7 +1188,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 
 <!-- Bottom nav flutuante mobile -->
-<nav class="bottom-nav" id="bottom-nav" style="display:none!important">
+<nav class="bottom-nav" id="bottom-nav" style="display:none">
   <button class="bnav-btn active" id="bnav-kanban" onclick="switchTabMobile('kanban',this)">
     <div class="bnav-pill">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1585,7 +1585,7 @@ window._resetHistorico = () => {
 </script>
 
 <script>
-const VERSION    = 'v2.2';
+const VERSION    = 'v2.2.2';
 // Usuários do sistema
 const USERS = {
   'admin':     { senha: 'admin',  isAdmin: true,  nome: 'Admin'     },
@@ -1650,6 +1650,7 @@ function doLogin() {
   document.getElementById('h-nome').textContent = userNome;
   document.getElementById('h-role').textContent = isAdmin ? 'Administrador' : 'Usuário';
   if (isAdmin) document.body.classList.add('is-admin');
+  document.body.classList.add('logged-in');
   const vEl = document.getElementById('app-version');
   if (vEl) vEl.textContent = ' ' + VERSION;
   // Mostra header stats imediatamente
@@ -1683,8 +1684,13 @@ function doLogin() {
   if (btnNotif) btnNotif.style.display = isAdmin ? 'flex' : 'none';
   const bnav = document.getElementById('bottom-nav');
   if (bnav) {
-    bnav.style.cssText = ''; // limpa o !important
-    bnav.style.display = window.innerWidth <= 768 ? 'flex' : 'none';
+    bnav.style.removeProperty('display');
+    // Só mostra no mobile
+    if (window.innerWidth <= 768) {
+      bnav.style.display = 'flex';
+    } else {
+      bnav.style.display = 'none';
+    }
     bnav.querySelectorAll('.admin-only').forEach(el => {
       el.style.display = isAdmin ? '' : 'none';
     });
@@ -1694,6 +1700,7 @@ function doLogin() {
 function doLogout() {
   state.user = null; state.isAdmin = false;
   document.body.classList.remove('is-admin');
+  document.body.classList.remove('logged-in');
   try { localStorage.removeItem('fio_sel'); localStorage.removeItem('fio_senha'); localStorage.removeItem('fio_lembrar'); } catch(e) {}
   try { const cb = document.getElementById('lembrar-check'); if(cb) cb.checked = false; } catch(e) {}
   const bnavOut = document.getElementById('bottom-nav');
