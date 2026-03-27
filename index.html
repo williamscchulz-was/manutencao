@@ -908,7 +908,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
       border-radius:22px;
       display:flex;align-items:center;justify-content:center;
       font-size:2.4rem;
-    ">🔧</div>
+    "></div>
     <div style="text-align:center">
       <div style="font-family:'Poppins',sans-serif;font-size:2rem;font-weight:700;color:#fff;letter-spacing:-0.5px;line-height:1">
         Fio<span style="color:rgba(255,255,255,0.7)">bras</span>
@@ -942,8 +942,8 @@ body.is-admin .tab-btn.admin-only { display: block; }
           <option value="pedro">Pedro</option>
           <option value="ivonei">Ivonei</option>
           <option value="roland">Roland</option>
-          <option value="joacir">🔐 Joacir</option>
-          <option value="__admin__">🔐 Administrador</option>
+          <option value="joacir"> Joacir</option>
+          <option value="__admin__"> Administrador</option>
         </select>
       </div>
       <div id="login-senha-wrap" style="display:none">
@@ -977,7 +977,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
           <div id="h-nome" class="h-nome-txt"></div>
           <div class="role" id="h-role"></div>
         </div>
-        <button id="btn-instalar" onclick="window._instalarApp()" class="btn-instalar" style="display:none">📲</button>
+        <button id="btn-instalar" onclick="window._instalarApp()" class="btn-instalar" style="display:none">Instalar</button>
         <button id="btn-notif-test" onclick="abrirModalNotifAdmin()" style="display:none;align-items:center;gap:5px;padding:7px 12px;background:rgba(255,203,0,0.15);border:1.5px solid rgba(255,203,0,0.4);border-radius:7px;color:#FFCB00;font-family:'Poppins',sans-serif;font-size:0.62rem;font-weight:600;cursor:pointer;white-space:nowrap" title="Enviar notificação">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       <span class="btn-notif-label">Notificar</span>
@@ -1019,11 +1019,11 @@ body.is-admin .tab-btn.admin-only { display: block; }
         <div style="display:flex;align-items:center;gap:10px">
           <select id="kfilter-sel" onchange="setKFilterSel(this)" style="background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;color:var(--text2);font-family:'Poppins',sans-serif;font-size:0.72rem;padding:8px 12px;outline:none;cursor:pointer">
             <option value="todos">Todos os cards</option>
-            <option value="mecanica">⚙️ Mecânica</option>
-            <option value="eletrica">⚡ Elétrica</option>
-            <option value="preventiva">🔵 Preventiva</option>
-            <option value="demanda">📋 Demanda</option>
-            <option value="alta">🔴 Urgência alta</option>
+            <option value="mecanica">Mecânica</option>
+            <option value="eletrica">Elétrica</option>
+            <option value="preventiva">Preventiva</option>
+            <option value="demanda"> Demanda</option>
+            <option value="alta">Alta: Urgência alta</option>
           </select>
         </div>
         <div style="display:flex;gap:8px">
@@ -1239,7 +1239,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
     <div id="qr-maq-nome" style="font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:16px"></div>
     <div class="modal-actions">
       <button class="modal-btn cancel" onclick="fecharModal('modal-qr')">Fechar</button>
-      <button class="modal-btn confirm" onclick="imprimirQR()">🖨 Imprimir</button>
+      <button class="modal-btn confirm" onclick="imprimirQR()">Imprimir</button>
     </div>
   </div>
 </div>
@@ -1248,12 +1248,12 @@ body.is-admin .tab-btn.admin-only { display: block; }
 <!-- MODAL NOTIFICAÇÃO ADMIN -->
 <div class="modal-bg" id="modal-notif-admin">
   <div class="modal" style="width:460px">
-    <div class="modal-title">📣 Enviar Notificação</div>
+    <div class="modal-title">Enviar Notificação</div>
     <div class="modal-grid">
       <div class="field">
         <label>Destinatário</label>
         <select id="notif-dest" style="background:var(--bg);border:1.5px solid var(--border2);border-radius:7px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.8rem;padding:9px 12px;outline:none;width:100%">
-          <option value="todos">📢 Todos os usuários</option>
+          <option value="todos"> Todos os usuários</option>
           <option value="hernandes">Hernandes</option>
           <option value="vorlei">Vorlei</option>
           <option value="pedro">Pedro</option>
@@ -1264,7 +1264,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
       </div>
       <div class="field">
         <label>Título</label>
-        <input id="notif-titulo" placeholder="Ex: Atenção equipe!" value="📣 Fiobras Manutenção">
+        <input id="notif-titulo" placeholder="Ex: Atenção equipe!" value="Fiobras Manutenção">
       </div>
       <div class="field">
         <label>Mensagem</label>
@@ -1272,11 +1272,11 @@ body.is-admin .tab-btn.admin-only { display: block; }
       </div>
     </div>
     <div style="background:var(--blue-lt);border:1px solid var(--blue-md);border-radius:8px;padding:10px 14px;font-size:0.68rem;color:var(--blue);margin-top:12px">
-      💡 Será exibido como notificação push nos celulares e popup na versão web
+      Será exibido como notificação push nos celulares e popup na versão web
     </div>
     <div class="modal-actions">
       <button class="modal-btn cancel" onclick="fecharModal('modal-notif-admin')">Cancelar</button>
-      <button class="modal-btn confirm" onclick="enviarNotifAdmin()" style="background:#FFCB00;color:#1a2e20">📣 Enviar</button>
+      <button class="modal-btn confirm" onclick="enviarNotifAdmin()" style="background:#FFCB00;color:#1a2e20">Enviar</button>
     </div>
   </div>
 </div>
@@ -1291,13 +1291,13 @@ body.is-admin .tab-btn.admin-only { display: block; }
   animation: slideDown 0.3s ease;
 ">
   <div style="display:flex;align-items:flex-start;gap:12px">
-    <div style="font-size:1.4rem;flex-shrink:0">📣</div>
+    <div style="font-size:1.4rem;flex-shrink:0"></div>
     <div style="flex:1">
       <div id="inapp-titulo" style="font-size:0.8rem;font-weight:700;color:#fff;margin-bottom:3px"></div>
       <div id="inapp-msg" style="font-size:0.72rem;color:rgba(255,255,255,0.75);line-height:1.4"></div>
       <div id="inapp-de" style="font-size:0.6rem;color:rgba(255,255,255,0.4);margin-top:5px"></div>
     </div>
-    <button onclick="fecharInAppNotif()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1rem;padding:0;flex-shrink:0">✕</button>
+    <button onclick="fecharInAppNotif()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1rem;padding:0;flex-shrink:0"></button>
   </div>
 </div>
 
@@ -1324,16 +1324,16 @@ body.is-admin .tab-btn.admin-only { display: block; }
           <label>Foto do problema <span style="font-weight:300;text-transform:none;letter-spacing:0">(opcional)</span></label>
           <div id="foto-wrap" style="border:2px dashed var(--border2);border-radius:8px;padding:14px;text-align:center;cursor:pointer;transition:border-color 0.2s" onclick="document.getElementById('dem-foto-input').click()">
             <div id="foto-preview-wrap" style="display:none"><img id="foto-preview" style="max-width:100%;max-height:160px;border-radius:6px;object-fit:cover"></div>
-            <div id="foto-placeholder" style="color:var(--muted);font-size:0.72rem">📷 Toque para tirar foto ou selecionar</div>
+            <div id="foto-placeholder" style="color:var(--muted);font-size:0.72rem">Toque para tirar foto ou selecionar</div>
           </div>
           <input type="file" id="dem-foto-input" accept="image/*" capture="environment" style="display:none" onchange="onFotoChange(this)">
         </div>
         <div class="field">
           <label>Urgência</label>
           <div class="urg-btns">
-            <button class="urg-btn" id="ub-baixa" onclick="selUrg('baixa')">🟢 Baixa</button>
-            <button class="urg-btn" id="ub-media" onclick="selUrg('media')">🟠 Média</button>
-            <button class="urg-btn" id="ub-alta"  onclick="selUrg('alta')">🔴 Alta</button>
+            <button class="urg-btn" id="ub-baixa" onclick="selUrg('baixa')">Baixa</button>
+            <button class="urg-btn" id="ub-media" onclick="selUrg('media')">Média</button>
+            <button class="urg-btn" id="ub-alta"  onclick="selUrg('alta')">Alta</button>
           </div>
         </div>
         <div class="field"><label>Data / Hora</label><input id="dem-data" readonly style="color:var(--muted);font-family:'DM Mono',monospace;font-size:0.75rem"></div>
@@ -1344,7 +1344,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
       </div>
     </div>
     <div class="success-msg" id="dem-success">
-      <div class="ok-icon">✅</div>
+      <div class="ok-icon"></div>
       <h3>Demanda registrada!</h3>
       <p>Sua solicitação foi adicionada ao Kanban de manutenção.</p>
       <button class="modal-btn confirm" style="margin-top:18px;max-width:200px" onclick="fecharModal('modal-demanda')">Fechar</button>
@@ -1377,10 +1377,10 @@ body.is-admin .tab-btn.admin-only { display: block; }
       <div class="field"><label>Descrição</label><textarea id="ca-desc" placeholder="Detalhes do serviço..."></textarea></div>
       <div class="field"><label>Urgência</label>
         <select id="ca-urg">
-          <option value="alta">🔴 Alta</option>
-          <option value="media" selected>🟠 Média</option>
-          <option value="baixa">🟢 Baixa</option>
-          <option value="prev">🔵 Preventiva</option>
+          <option value="alta">Alta</option>
+          <option value="media" selected>Média</option>
+          <option value="baixa">Baixa</option>
+          <option value="prev">Preventiva</option>
         </select>
       </div>
     </div>
@@ -1585,7 +1585,7 @@ window._resetHistorico = () => {
 </script>
 
 <script>
-const VERSION    = 'v2.2.2';
+const VERSION    = 'v2.3';
 // Usuários do sistema
 const USERS = {
   'admin':     { senha: 'admin',  isAdmin: true,  nome: 'Admin'     },
@@ -1725,7 +1725,7 @@ function nowStr() {
 function todayStr() { return new Date().toISOString().split('T')[0]; }
 
 function urgLabel(u) {
-  return { alta:'🔴 Alta', media:'🟠 Média', baixa:'🟢 Baixa', prev:'🔵 Preventiva' }[u] || u;
+  return { alta:'Alta', media:'Média', baixa:'Baixa', prev:'Preventiva' }[u] || u;
 }
 function urgBadge(u) {
   const cls = { alta:'badge-red', media:'badge-orange', baixa:'badge-green', prev:'badge-blue' }[u] || 'badge-gray';
@@ -1733,8 +1733,8 @@ function urgBadge(u) {
 }
 function setorBadge(s) {
   return s === 'eletrica'
-    ? `<span class="badge badge-ele">⚡ Elétrica</span>`
-    : `<span class="badge badge-mec">⚙️ Mecânica</span>`;
+    ? `<span class="badge badge-ele">Elétrica</span>`
+    : `<span class="badge badge-mec">Mecânica</span>`;
 }
 
 // ── GERAR CARDS DE PREVENTIVAS VENCIDAS ───────────────
@@ -1774,7 +1774,7 @@ function gerarCardsPreventivas() {
         // Notifica via FCM todos os dispositivos logados
         if (card.urg === 'alta' && window._fbPushFCMPending) {
           window._fbPushFCMPending({
-            titulo: '🔴 Preventiva urgente — ' + (card.equip || 'Equipamento'),
+            titulo: 'Alerta: Preventiva urgente — ' + (card.equip || 'Equipamento'),
             corpo:  card.titulo || 'Manutenção preventiva pendente',
             ts:     Date.now(),
             resp:   card.resp || '',
@@ -1803,8 +1803,8 @@ function updateBanner() {
   banner.style.display = 'block';
   const qtd = pendentes.length;
   const titulo = qtd === 1
-    ? '🔴 1 preventiva vencida pendente'
-    : `🔴 ${qtd} preventivas vencidas pendentes`;
+    ? 'Alta: 1 preventiva vencida pendente'
+    : `Alta: ${qtd} preventivas vencidas pendentes`;
 
   // Monta lista com máquina + responsável
   const itens = pendentes.map(c => {
@@ -1814,7 +1814,7 @@ function updateBanner() {
     const maquina = c.equip || c.titulo || '—';
     return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(217,64,64,0.15)">
       <span style="font-size:0.72rem;font-weight:600;color:#c03030">${maquina}</span>
-      <span style="font-size:0.65rem;color:#d94040">👷 ${resp}</span>
+      <span style="font-size:0.65rem;color:#d94040">${resp}</span>
     </div>`;
   }).join('');
 
@@ -1895,11 +1895,11 @@ function buildCard(c) {
         <button class="comment-send" onclick="adicionarComentario('${c._key}')">Enviar</button>
       </div>
     </div>`;
-  // Admin: vê ✓ e ✕ em qualquer card
-  // Usuário: vê ✕ apenas nas próprias demandas
+  // Admin: vê  e  em qualquer card
+  // Usuário: vê  apenas nas próprias demandas
     const podeExcluir = state.isAdmin || (c.tipo === 'demanda' && c.autor === state.user);
-  const btnConcluir = `<button class="card-menu-btn" onclick="moverCard('CKEY','done')" title="Concluir">✓</button>`.replace('CKEY', c._key);
-  const btnExcluir  = `<button class="card-menu-btn" onclick="deletarCard('CKEY')" title="Excluir" style="color:var(--red);opacity:.7">✕</button>`.replace('CKEY', c._key);
+  const btnConcluir = `<button class="card-menu-btn" onclick="moverCard('CKEY','done')" title="Concluir"></button>`.replace('CKEY', c._key);
+  const btnExcluir  = `<button class="card-menu-btn" onclick="deletarCard('CKEY')" title="Excluir" style="color:var(--red);opacity:.7"></button>`.replace('CKEY', c._key);
   const adminActions = state.isAdmin ? (btnConcluir + btnExcluir) : podeExcluir ? btnExcluir : '';
 
   return `
@@ -1921,7 +1921,7 @@ function buildCard(c) {
           const last = c.movLog[c.movLog.length-1];
           const colLabel = {todo:'A Fazer',doing:'Em Andamento',done:'Concluído'};
           return `<div style="font-size:0.58rem;color:var(--muted);background:var(--bg);border-radius:5px;padding:3px 7px">
-            ↪ ${last.resp} → ${colLabel[last.para]||last.para} · ${last.hora}
+            ${last.resp} → ${colLabel[last.para]||last.para} · ${last.hora}
           </div>`;
         })() : ''}
       </div>
@@ -2135,9 +2135,9 @@ function renderPreventiva() {
       <td>${proxima.toLocaleDateString('pt-BR')}</td>
       <td><span class="badge ${bCls}">${bTxt}</span></td>
       <td style="display:flex;gap:5px;align-items:center">
-        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="executarPreventiva('${p._key||p.id}')">✓</button>
-        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="abrirModalPreventiva('${p._key||p.id}')">✏️</button>
-        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarPreventiva('${p._key||p.id}')">✕</button>
+        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="executarPreventiva('${p._key||p.id}')"></button>
+        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="abrirModalPreventiva('${p._key||p.id}')">️</button>
+        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarPreventiva('${p._key||p.id}')"></button>
       </td>
     </tr>`;
   }).join('');
@@ -2251,9 +2251,9 @@ function renderHistorico() {
         <div class="tl-desc">${h.desc}</div>
         <div class="tl-meta">
           <span class="badge badge-${h.tipo==='Corretiva'?'red':h.tipo==='Troca de peça'?'blue':'green'}" style="font-size:0.58rem">${h.tipo}</span>
-          ${h.pecas&&h.pecas!=='—'?`<span class="tl-tag">🔩 ${h.pecas}</span>`:''}
-          <span class="tl-tag">👷 ${h.resp}</span>
-          ${h.horas?`<span class="tl-tag">⏱ ${h.horas}h</span>`:''}
+          ${h.pecas&&h.pecas!=='—'?`<span class="tl-tag">${h.pecas}</span>`:''}
+          <span class="tl-tag">${h.resp}</span>
+          ${h.horas?`<span class="tl-tag">${h.horas}h</span>`:''}
           ${h.custo?`<span class="tl-tag">R$ ${parseFloat(h.custo).toFixed(2).replace('.',',')}</span>`:''}
         </div>
       </div>
@@ -2312,17 +2312,61 @@ function renderCalendario() {
 let notifPermission = 'default';
 
 function initNotificacoes() {
-  if (!('Notification' in window)) return;
-  notifPermission = Notification.permission;
-  if (notifPermission === 'default') {
-    // Pede permissão suavemente após login
-    setTimeout(() => {
-      Notification.requestPermission().then(p => {
-        notifPermission = p;
-        if (p === 'granted') mostrarNotif('🔧 Fiobras Manutenção', 'Notificações ativadas! Você será avisado sobre cards urgentes.', null);
-      });
-    }, 2000);
+  if (!('Notification' in window)) {
+    mostrarBannerNotif('Seu dispositivo não suporta notificações.', false);
+    return;
   }
+  notifPermission = Notification.permission;
+
+  if (notifPermission === 'granted') {
+    // Já permitido — confirmar silenciosamente
+    esconderBannerNotif();
+    return;
+  }
+
+  if (notifPermission === 'denied') {
+    // Bloqueado — orientar usuário
+    mostrarBannerNotif('Notificações bloqueadas. Ative nas configurações do navegador.', false);
+    return;
+  }
+
+  // 'default' — ainda não decidiu, pedir
+  mostrarBannerNotif('Ative as notificações para receber alertas de manutenção.', true);
+}
+
+function mostrarBannerNotif(msg, showBtn) {
+  let banner = document.getElementById('notif-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'notif-banner';
+    banner.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;background:#1a2e20;border-radius:12px;padding:12px 16px;z-index:500;display:flex;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,0.25)';
+    document.body.appendChild(banner);
+  }
+  banner.innerHTML = `
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    <span style="flex:1;font-size:0.7rem;color:rgba(255,255,255,0.85);line-height:1.4">${msg}</span>
+    ${showBtn ? `<button onclick="pedirPermissaoNotif()" style="background:#0076BE;border:none;border-radius:8px;color:#fff;font-family:'Poppins',sans-serif;font-size:0.65rem;font-weight:600;padding:8px 14px;cursor:pointer;white-space:nowrap">Ativar</button>` : ''}
+    <button onclick="esconderBannerNotif()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1rem;cursor:pointer;padding:0;flex-shrink:0"></button>
+  `;
+  banner.style.display = 'flex';
+}
+
+function esconderBannerNotif() {
+  const b = document.getElementById('notif-banner');
+  if (b) b.style.display = 'none';
+}
+
+function pedirPermissaoNotif() {
+  Notification.requestPermission().then(p => {
+    notifPermission = p;
+    if (p === 'granted') {
+      esconderBannerNotif();
+      mostrarNotif('Fiobras Manutenção', 'Notificações ativadas!', null);
+      initFCMToken();
+    } else {
+      mostrarBannerNotif('Permissão negada. Ative nas configurações do navegador.', false);
+    }
+  });
 }
 
 function mostrarNotif(titulo, corpo, tag) {
@@ -2334,8 +2378,8 @@ function mostrarNotif(titulo, corpo, tag) {
 
     const n = new Notification(titulo, {
       body: corpo,
-      icon: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='110' font-family='sans-serif'>🔧</text></svg>`),
-      badge: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' rx='16' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='60' font-family='sans-serif'>🔧</text></svg>`),
+      icon: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='110' font-family='sans-serif'></text></svg>`),
+      badge: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' rx='16' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='60' font-family='sans-serif'></text></svg>`),
       tag: tag || 'fiobras-manut',
       renotify: true,
       requireInteraction: true,
@@ -2390,7 +2434,7 @@ function dispararNotif(card) {
     const pv = state.preventivas.find(p => (p._key || p.id) === card.prevId);
     if (pv && pv.resp && pv.resp !== state.user) return; // não é responsável
   }
-  const titulo = '🔴 Preventiva urgente — ' + (card.equip || 'Equipamento');
+  const titulo = 'Alerta: Preventiva urgente — ' + (card.equip || 'Equipamento');
   const corpo  = card.titulo || 'Manutenção preventiva pendente';
   mostrarNotif(titulo, corpo, 'prev-' + card._key);
 }
@@ -2427,14 +2471,14 @@ function renderMaquinas() {
       <div class="maquina-top">
         <div>
           <div class="maquina-nome">${m.nome}</div>
-          <div class="maquina-tag">${m.tag || ''} · ${m.setor === 'eletrica' ? '⚡ Elétrica' : '⚙️ Mecânica'}</div>
+          <div class="maquina-tag">${m.tag || ''} · ${m.setor === 'eletrica' ? 'Elétrica' : 'Mecânica'}</div>
         </div>
         <div style="display:flex;gap:4px">
           <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" title="QR Code" onclick="abrirQR('${m._key}','${m.tag || m.nome}')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="6" y="6" width="1" height="1" fill="currentColor"/><rect x="17" y="6" width="1" height="1" fill="currentColor"/><rect x="6" y="17" width="1" height="1" fill="currentColor"/><line x1="14" y1="14" x2="14" y2="14"/><line x1="17" y1="14" x2="21" y2="14"/><line x1="14" y1="17" x2="14" y2="21"/><line x1="17" y1="17" x2="17" y2="17"/><line x1="21" y1="17" x2="21" y2="17"/><line x1="21" y1="21" x2="21" y2="21"/></svg>
           </button>
-          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" onclick="abrirModalMaquina('${m._key}')">✏️</button>
-          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarMaquina('${m._key}')">✕</button>
+          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" onclick="abrirModalMaquina('${m._key}')">️</button>
+          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarMaquina('${m._key}')"></button>
         </div>
       </div>
       <div class="maquina-body">
@@ -2780,14 +2824,14 @@ function aplicarQRSeExistir() {
 // ── NOTIFICAÇÃO ADMIN ──────────────────────────────────────
 function abrirModalNotifAdmin() {
   document.getElementById('notif-msg').value = '';
-  document.getElementById('notif-titulo').value = '📣 Fiobras Manutenção';
+  document.getElementById('notif-titulo').value = 'Fiobras Manutenção';
   document.getElementById('modal-notif-admin').classList.add('open');
   setTimeout(() => document.getElementById('notif-msg').focus(), 100);
 }
 
 function enviarNotifAdmin() {
   const dest   = document.getElementById('notif-dest').value;
-  const titulo = document.getElementById('notif-titulo').value.trim() || '📣 Fiobras Manutenção';
+  const titulo = document.getElementById('notif-titulo').value.trim() || 'Fiobras Manutenção';
   const msg    = document.getElementById('notif-msg').value.trim();
   if (!msg) { alert('Escreva uma mensagem.'); return; }
 
@@ -2854,6 +2898,7 @@ Object.assign(window, {
   abrirModalPreventiva, salvarPreventiva, executarPreventiva, deletarPreventiva,
   fecharModal,
   renderCalendario, initNotificacoes, mostrarNotif,
+  pedirPermissaoNotif, esconderBannerNotif,
   renderMaquinas, abrirModalMaquina, salvarMaquina, deletarMaquina, updateBanner,
   abrirQR, imprimirQR,
   abrirModalNotifAdmin, enviarNotifAdmin, fecharInAppNotif,
@@ -2901,13 +2946,13 @@ const manifest = {
   orientation: "portrait-primary",
   icons: [
     {
-      src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='110' font-family='sans-serif'>🔧</text></svg>`),
+      src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='110' font-family='sans-serif'></text></svg>`),
       sizes: "192x192",
       type: "image/svg+xml",
       purpose: "any maskable"
     },
     {
-      src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='300' font-family='sans-serif'>🔧</text></svg>`),
+      src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='300' font-family='sans-serif'></text></svg>`),
       sizes: "512x512",
       type: "image/svg+xml",
       purpose: "any maskable"
