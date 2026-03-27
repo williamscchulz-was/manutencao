@@ -840,6 +840,7 @@ onValue(prevRef, snap => {
   const val = snap.val();
   state.preventivas = val ? Object.entries(val).map(([k,v]) => ({...v, _key:k})) : DEFAULT_PREV;
   gerarCardsPreventivas();
+  limparCardsOrfaos();
   renderPreventiva();
 });
 onValue(pecasRef, snap => {
@@ -872,6 +873,14 @@ window._resetDB = () => {
     set(ref(db, 'manutencao/preventivas'), null),
     set(ref(db, 'manutencao/historico'), null),
   ]).then(() => { alert('Dados apagados. Recarregue a página.'); location.reload(); });
+};
+window._resetKanban = () => {
+  if (!confirm('Apagar todos os cards do Kanban?')) return;
+  set(ref(db, 'manutencao/kanban'), null).then(() => location.reload());
+};
+window._resetHistorico = () => {
+  if (!confirm('Apagar todo o histórico?')) return;
+  set(ref(db, 'manutencao/historico'), null).then(() => location.reload());
 };
 </script>
 
@@ -1062,13 +1071,13 @@ function renderKanban() {
 
 function buildCard(c) {
   const doneClass = c.col === 'done' ? 'done-card' : '';
-  const podeExcluir = state.isAdmin || (c.tipo === 'demanda' && c.autor === state.user);
-  const adminActions = state.isAdmin
-    ? `<button class="card-menu-btn" onclick="moverCard('${c._key}','done')" title="Concluir">✓</button>
-       <button class="card-menu-btn" onclick="deletarCard('${c._key}')" title="Excluir" style="color:var(--red);opacity:.6">✕</button>`
-    : podeExcluir
-    ? `<button class="card-menu-btn" onclick="deletarCard('${c._key}')" title="Excluir" style="color:var(--red);opacity:.6">✕</button>`
-    : '';
+  // Admin: vê ✓ e ✕ em qualquer card
+  // Usuário: vê ✕ apenas nas próprias demandas
+    const podeExcluir = state.isAdmin || (c.tipo === 'demanda' && c.autor === state.user);
+  const btnConcluir = `<button class="card-menu-btn" onclick="moverCard('CKEY','done')" title="Concluir">✓</button>`.replace('CKEY', c._key);
+  const btnExcluir  = `<button class="card-menu-btn" onclick="deletarCard('CKEY')" title="Excluir" style="color:var(--red);opacity:.7">✕</button>`.replace('CKEY', c._key);
+  const adminActions = state.isAdmin ? (btnConcluir + btnExcluir) : podeExcluir ? btnExcluir : '';
+
   return `
     <div class="kanban-card ${doneClass}" draggable="${state.isAdmin}" data-id="${c._key}" data-urg="${c.urg}">
       <div class="card-top">
