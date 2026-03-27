@@ -819,6 +819,16 @@ window._fbUpdatePrev = (key, data) => update(ref(db, `manutencao/preventivas/${k
 window._fbPushPeca = (p) => push(pecasRef, p);
 window._fbPushHist = (h) => push(historicoRef, h);
 window._fbReady = true;
+
+// Para limpar dados de teste: abra o console e execute window._resetDB()
+window._resetDB = () => {
+  if (!confirm('Apagar TODOS os dados do sistema de manutenção?')) return;
+  Promise.all([
+    set(ref(db, 'manutencao/kanban'), null),
+    set(ref(db, 'manutencao/preventivas'), null),
+    set(ref(db, 'manutencao/historico'), null),
+  ]).then(() => { alert('Dados apagados. Recarregue a página.'); location.reload(); });
+};
 </script>
 
 <script>
