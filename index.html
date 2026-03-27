@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Fiobras · Manutenção</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -33,7 +33,15 @@
   --col-bg:     #eef4f8;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; touch-action: pan-y; }
 
 /* ── LOGIN ── */
 .login-screen {
@@ -1162,7 +1170,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 
 <!-- Bottom nav flutuante mobile -->
-<nav class="bottom-nav" id="bottom-nav" style="display:none">
+<nav class="bottom-nav" id="bottom-nav" style="display:none!important">
   <button class="bnav-btn active" id="bnav-kanban" onclick="switchTabMobile('kanban',this)">
     <div class="bnav-pill">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1182,7 +1190,11 @@ body.is-admin .tab-btn.admin-only { display: block; }
   <button class="bnav-btn admin-only" id="bnav-maquinas" onclick="switchTabMobile('maquinas',this)">
     <div class="bnav-pill">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 17.66l-1.41 1.41M2 12h2M20 12h2M19.07 19.07l-1.41-1.41M5.34 6.34L3.93 4.93M12 2v2M12 20v2"/>
+        <!-- Fábrica/galpão industrial -->
+        <path d="M2 20V9l6-4v4l6-4v4l6-4v15H2z"/>
+        <rect x="9" y="14" width="2" height="6"/>
+        <rect x="13" y="14" width="2" height="6"/>
+        <path d="M5 20v-4h3v4"/>
       </svg>
     </div>
     <span class="bnav-label">Máquinas</span>
@@ -1463,7 +1475,7 @@ window._resetHistorico = () => {
 </script>
 
 <script>
-const VERSION    = 'v1.6';
+const VERSION    = 'v1.8';
 // Usuários do sistema
 const USERS = {
   'admin':     { senha: 'admin',  isAdmin: true,  nome: 'Admin'     },
@@ -1556,7 +1568,8 @@ function doLogin() {
   // Bottom nav — mostrar/esconder itens admin
   const bnav = document.getElementById('bottom-nav');
   if (bnav) {
-    bnav.style.display = 'flex';
+    bnav.style.cssText = ''; // limpa o !important
+    bnav.style.display = window.innerWidth <= 768 ? 'flex' : 'none';
     bnav.querySelectorAll('.admin-only').forEach(el => {
       el.style.display = isAdmin ? '' : 'none';
     });
@@ -1568,6 +1581,8 @@ function doLogout() {
   document.body.classList.remove('is-admin');
   try { localStorage.removeItem('fio_sel'); localStorage.removeItem('fio_senha'); localStorage.removeItem('fio_lembrar'); } catch(e) {}
   try { const cb = document.getElementById('lembrar-check'); if(cb) cb.checked = false; } catch(e) {}
+  const bnavOut = document.getElementById('bottom-nav');
+  if (bnavOut) bnavOut.style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-nome').value = '';
