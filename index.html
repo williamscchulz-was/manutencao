@@ -134,10 +134,13 @@ body { background: var(--bg); color: var(--text); font-family: 'Poppins', sans-s
 .tabs {
   background: var(--surface);
   border-bottom: 1.5px solid var(--border);
-  padding: 0 24px;
+  padding: 0 12px;
   display: flex;
-  gap: 2px;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.tabs::-webkit-scrollbar { display: none; }
 .tab-btn {
   padding: 13px 18px;
   background: none;
@@ -162,7 +165,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 .panel.active { display: block; }
 
 /* ── KANBAN ── */
-.kanban-wrap { padding: 24px; overflow-x: auto; }
+.kanban-wrap { padding: 24px; overflow-x: hidden; }
 .kanban-toolbar {
   display: flex;
   align-items: center;
@@ -189,9 +192,33 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 .kanban-board {
   display: grid;
-  grid-template-columns: repeat(3, 320px);
-  gap: 16px;
-  min-width: max-content;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+@media(max-width: 700px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .kanban-col {
+    min-height: auto;
+  }
+  .kanban-wrap {
+    padding: 14px;
+  }
+  .kanban-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .kanban-toolbar > div:last-child {
+    justify-content: stretch;
+  }
+  .kanban-toolbar .btn-primary {
+    flex: 1;
+    justify-content: center;
+  }
 }
 
 .kanban-col {
@@ -284,7 +311,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 .kanban-card[data-urg="prev"]   { border-left: 4px solid var(--blue); }
 
 /* ── CONTAINER ── */
-.container { max-width: 1000px; margin: 0 auto; padding: 28px 24px 80px; }
+.container { max-width: 1000px; margin: 0 auto; padding: 20px 14px 80px; }
 
 /* ── SECTION HEADER ── */
 .sec-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
@@ -881,6 +908,11 @@ function doLogin() {
   document.getElementById('h-nome').textContent = nome;
   document.getElementById('h-role').textContent = isAdmin ? 'Administrador' : 'Usuário';
   if (isAdmin) document.body.classList.add('is-admin');
+  // Salva credenciais no dispositivo
+  try {
+    localStorage.setItem('fio_nome',  nome);
+    localStorage.setItem('fio_senha', senha);
+  } catch(e) {}
   initNotificacoes();
   if (!isAdmin) {
     // Usuário padrão: mostra só kanban, sem abas admin
@@ -891,6 +923,7 @@ function doLogin() {
 function doLogout() {
   state.user = null; state.isAdmin = false;
   document.body.classList.remove('is-admin');
+  try { localStorage.removeItem('fio_nome'); localStorage.removeItem('fio_senha'); } catch(e) {}
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-nome').value = '';
@@ -1352,33 +1385,64 @@ function mostrarNotif(titulo, corpo, tag) {
   } catch(e) { console.warn('Notif error:', e); }
 }
 
-// Detecta cards novos de urgência alta
-// prevCardIds começa como null — primeira carga não notifica, só inicializa
+// Detecta cards preventivos de urgência alta — notifica repetidamente enquanto pendente
 let prevCardIds = null;
+let notifIntervals = {}; // key -> intervalId — renotifica a cada 5 min
 
 function checkNotifNovosCards(cards) {
-  const altaCards = cards.filter(c => c.urg === 'alta' && c.col !== 'done');
-  const currentIds = new Set(cards.map(c => c._key));
+  // Apenas preventivas com urgência alta que não estão concluídas
+  const altaCards = cards.filter(c =>
+    c.tipo === 'preventiva' && c.urg === 'alta' && c.col !== 'done'
+  );
+  const currentAltaIds = new Set(altaCards.map(c => c._key));
+  const currentAllIds  = new Set(cards.map(c => c._key));
 
   if (prevCardIds === null) {
-    // Primeira carga: apenas inicializa, não notifica
-    prevCardIds = currentIds;
+    // Primeira carga: inicializa sem notificar cards antigos
+    prevCardIds = currentAllIds;
+    // Mas agenda renotificação para preventivas alta já existentes
+    altaCards.forEach(c => agendarRenotif(c));
     return;
   }
 
-  // Notifica apenas cards que não existiam antes
+  // Novos cards preventivos alta
   altaCards.forEach(c => {
     if (!prevCardIds.has(c._key)) {
-      const setor = c.setor === 'eletrica' ? '⚡ Elétrica' : '⚙️ Mecânica';
-      mostrarNotif(
-        '🔴 Nova demanda urgente — ' + setor,
-        (c.equip ? c.equip + ': ' : '') + c.titulo,
-        'alta-' + c._key
-      );
+      dispararNotif(c);
+      agendarRenotif(c);
     }
   });
 
-  prevCardIds = currentIds;
+  // Cancela intervalos de cards que foram concluídos ou removidos
+  Object.keys(notifIntervals).forEach(key => {
+    if (!currentAltaIds.has(key)) {
+      clearInterval(notifIntervals[key]);
+      delete notifIntervals[key];
+    }
+  });
+
+  prevCardIds = currentAllIds;
+}
+
+function dispararNotif(card) {
+  if (notifPermission !== 'granted') return;
+  const titulo = '🔴 Preventiva urgente — ' + (card.equip || 'Equipamento');
+  const corpo  = card.titulo || 'Manutenção preventiva pendente';
+  mostrarNotif(titulo, corpo, 'prev-' + card._key);
+}
+
+function agendarRenotif(card) {
+  if (notifIntervals[card._key]) return; // já agendado
+  // Renotifica a cada 5 minutos enquanto o card estiver pendente
+  notifIntervals[card._key] = setInterval(() => {
+    const ainda = state.cards.find(c => c._key === card._key && c.col !== 'done');
+    if (ainda) {
+      dispararNotif(ainda);
+    } else {
+      clearInterval(notifIntervals[card._key]);
+      delete notifIntervals[card._key];
+    }
+  }, 24 * 60 * 60 * 1000); // 24 horas
 }
 
 // ── MODAL UTIL ────────────────────────────────────────
@@ -1410,6 +1474,25 @@ Object.assign(window, {
   renderCalendario, initNotificacoes, mostrarNotif,
   abrirModalMover, confirmarMove, cancelarMove, setKFilterSel,
 });
+
+// ── AUTO-LOGIN ─────────────────────────────────────────────
+(function() {
+  try {
+    const savedNome  = localStorage.getItem('fio_nome');
+    const savedSenha = localStorage.getItem('fio_senha');
+    if (savedNome && savedSenha && (savedSenha === ADMIN_PASS || savedSenha === USER_PASS)) {
+      document.getElementById('login-nome').value  = savedNome;
+      document.getElementById('login-senha').value = savedSenha;
+      // Aguarda o DOM estar pronto
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', doLogin);
+      } else {
+        doLogin();
+      }
+    }
+  } catch(e) {}
+})();
+
 </script>
 
 <script>
