@@ -499,6 +499,10 @@ body.is-admin .tab-btn.admin-only { display: block; }
       <label>Senha</label>
       <input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <input type="checkbox" id="lembrar-check" style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer">
+      <label for="lembrar-check" style="font-size:0.7rem;color:var(--muted);cursor:pointer;user-select:none">Lembrar meus dados de acesso</label>
+    </div>
     <button class="login-btn" onclick="doLogin()">Entrar</button>
     <div class="login-err" id="login-err"></div>
     </div>
@@ -909,10 +913,18 @@ function doLogin() {
   document.getElementById('h-nome').textContent = nome;
   document.getElementById('h-role').textContent = isAdmin ? 'Administrador' : 'Usuário';
   if (isAdmin) document.body.classList.add('is-admin');
-  // Salva credenciais no dispositivo
+  // Salva credenciais se usuário marcou "lembrar"
   try {
-    localStorage.setItem('fio_nome',  nome);
-    localStorage.setItem('fio_senha', senha);
+    const lembrar = document.getElementById('lembrar-check');
+    if (lembrar && lembrar.checked) {
+      localStorage.setItem('fio_nome',   nome);
+      localStorage.setItem('fio_senha',  senha);
+      localStorage.setItem('fio_lembrar','1');
+    } else {
+      localStorage.removeItem('fio_nome');
+      localStorage.removeItem('fio_senha');
+      localStorage.removeItem('fio_lembrar');
+    }
   } catch(e) {}
   initNotificacoes();
   if (!isAdmin) {
@@ -924,7 +936,8 @@ function doLogin() {
 function doLogout() {
   state.user = null; state.isAdmin = false;
   document.body.classList.remove('is-admin');
-  try { localStorage.removeItem('fio_nome'); localStorage.removeItem('fio_senha'); } catch(e) {}
+  try { localStorage.removeItem('fio_nome'); localStorage.removeItem('fio_senha'); localStorage.removeItem('fio_lembrar'); } catch(e) {}
+  try { const cb = document.getElementById('lembrar-check'); if(cb) cb.checked = false; } catch(e) {}
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-nome').value = '';
@@ -1038,9 +1051,12 @@ function renderKanban() {
 
 function buildCard(c) {
   const doneClass = c.col === 'done' ? 'done-card' : '';
+  const podeExcluir = state.isAdmin || (c.tipo === 'demanda' && c.autor === state.user);
   const adminActions = state.isAdmin
     ? `<button class="card-menu-btn" onclick="moverCard('${c._key}','done')" title="Concluir">✓</button>
        <button class="card-menu-btn" onclick="deletarCard('${c._key}')" title="Excluir" style="color:var(--red);opacity:.6">✕</button>`
+    : podeExcluir
+    ? `<button class="card-menu-btn" onclick="deletarCard('${c._key}')" title="Excluir" style="color:var(--red);opacity:.6">✕</button>`
     : '';
   return `
     <div class="kanban-card ${doneClass}" draggable="${state.isAdmin}" data-id="${c._key}" data-urg="${c.urg}">
@@ -1313,6 +1329,10 @@ function salvarPreventiva() {
 function deletarPreventiva(key) {
   if (!confirm('Remover esta preventiva?')) return;
   if (window._fbRemovePrev) window._fbRemovePrev(key);
+  // Remove todos os cards do Kanban vinculados a esta preventiva
+  state.cards
+    .filter(c => c.prevId === key)
+    .forEach(c => { if (window._fbRemoveCard) window._fbRemoveCard(c._key); });
 }
 function executarPreventiva(key) {
   window._fbUpdatePrev(key, { ultima: todayStr() });
@@ -1515,20 +1535,23 @@ Object.assign(window, {
   abrirModalMover, confirmarMove, cancelarMove, setKFilterSel,
 });
 
-// ── AUTO-LOGIN ─────────────────────────────────────────────
+
+
+
+// ── PREENCHER LOGIN SALVO ──────────────────────────────────
 (function() {
   try {
     const savedNome  = localStorage.getItem('fio_nome');
     const savedSenha = localStorage.getItem('fio_senha');
-    if (savedNome && savedSenha && (savedSenha === ADMIN_PASS || savedSenha === USER_PASS)) {
-      document.getElementById('login-nome').value  = savedNome;
-      document.getElementById('login-senha').value = savedSenha;
-      // Aguarda o DOM estar pronto
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', doLogin);
-      } else {
+    const savedLembrar = localStorage.getItem('fio_lembrar');
+    if (savedLembrar === '1' && savedNome && savedSenha) {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('login-nome').value  = savedNome;
+        document.getElementById('login-senha').value = savedSenha;
+        document.getElementById('lembrar-check').checked = true;
+        // Auto-login direto pois o usuário já pediu pra lembrar
         doLogin();
-      }
+      });
     }
   } catch(e) {}
 })();
