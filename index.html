@@ -991,9 +991,10 @@ window._resetHistorico = () => {
 </script>
 
 <script>
-const VERSION    = 'v0.2';
-const ADMIN_PASS = 'admin';
-const USER_PASS  = 'user';
+const VERSION    = 'v0.3';
+const ADMIN_PASS  = 'admin';
+const USER_PASS   = 'user';
+const JOACIR_PASS = '2725';
 
 const state = {
   user: null,
@@ -1020,7 +1021,7 @@ function doLogin() {
   const nome  = document.getElementById('login-nome').value.trim();
   const senha = document.getElementById('login-senha').value;
   if (!nome) { document.getElementById('login-err').textContent = 'Informe seu nome.'; return; }
-  if (senha !== ADMIN_PASS && senha !== USER_PASS) {
+  if (senha !== ADMIN_PASS && senha !== USER_PASS && senha !== JOACIR_PASS) {
     document.getElementById('login-err').textContent = 'Senha incorreta.'; return;
   }
   const isAdmin = senha === ADMIN_PASS;
