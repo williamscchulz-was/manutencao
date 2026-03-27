@@ -475,6 +475,38 @@ body.is-admin .tab-btn.admin-only { display: block; }
 .cal-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.62rem; color: var(--muted); }
 .cal-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
 
+
+/* ── MÁQUINAS ── */
+.maquinas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 14px; }
+.maquina-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.maquina-card:hover { box-shadow: 0 4px 18px rgba(0,118,190,0.1); border-color: var(--blue-md); }
+.maquina-top {
+  background: var(--blue-lt);
+  border-bottom: 1.5px solid var(--blue-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.maquina-nome { font-size: 0.85rem; font-weight: 700; color: var(--blue); }
+.maquina-tag { font-family: 'DM Mono',monospace; font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
+.maquina-body { padding: 12px 16px; }
+.maquina-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+.maquina-meta-item { font-size: 0.62rem; }
+.maquina-meta-label { color: var(--muted); display: block; }
+.maquina-meta-val { font-weight: 500; color: var(--text2); }
+.maquina-prevs { border-top: 1px solid var(--border); padding-top: 10px; }
+.maquina-prevs-title { font-size: 0.57rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.maquina-prev-item { font-size: 0.68rem; color: var(--text2); padding: 3px 0; border-bottom: 1px dashed var(--border); display: flex; justify-content: space-between; }
+.maquina-prev-item:last-child { border-bottom: none; }
+.maquina-actions { display: flex; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--border); }
+
 </style>
 
   <meta name="theme-color" content="#0076BE">
@@ -546,6 +578,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
   <div class="tabs" id="main-tabs">
     <button class="tab-btn active" onclick="switchTab('kanban',this)" id="tab-kanban">Kanban</button>
     <button class="tab-btn admin-only" onclick="switchTab('preventiva',this)">Preventiva</button>
+    <button class="tab-btn admin-only" onclick="switchTab('maquinas',this)">Máquinas</button>
     <button class="tab-btn admin-only" onclick="switchTab('historico',this)">Histórico</button>
   </div>
 
@@ -626,6 +659,18 @@ body.is-admin .tab-btn.admin-only { display: block; }
   </div>
 
 
+
+  <!-- ── MÁQUINAS ── -->
+  <div class="panel" id="panel-maquinas">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-title">Inventário de Máquinas</div>
+      <button class="btn-primary" onclick="abrirModalMaquina()">+ Máquina</button>
+    </div>
+    <div id="maquinas-grid" class="maquinas-grid"></div>
+  </div>
+  </div>
+
   <!-- ── HISTÓRICO ── -->
   <div class="panel" id="panel-historico">
   <div class="container">
@@ -672,6 +717,38 @@ body.is-admin .tab-btn.admin-only { display: block; }
 </div>
 
 
+
+
+<!-- MÁQUINA -->
+<div class="modal-bg" id="modal-maquina">
+  <div class="modal" style="width:520px">
+    <div class="modal-title" id="maq-modal-title">Nova Máquina</div>
+    <div class="modal-grid">
+      <div class="modal-row">
+        <div class="field"><label>Nome da máquina</label><input id="maq-nome" placeholder="Retorcedeira #1"></div>
+        <div class="field"><label>Código / Tag</label><input id="maq-tag" placeholder="RET-01"></div>
+      </div>
+      <div class="modal-row">
+        <div class="field"><label>Setor</label>
+          <select id="maq-setor">
+            <option value="mecanica">Mecânica</option>
+            <option value="eletrica">Elétrica</option>
+          </select>
+        </div>
+        <div class="field"><label>Ano de aquisição</label><input id="maq-ano" type="number" placeholder="2020"></div>
+      </div>
+      <div class="field"><label>Fabricante / Modelo</label><input id="maq-modelo" placeholder="Saurer Allma CC3"></div>
+      <div class="field">
+        <label>Preventivas padrão <span style="font-weight:300;text-transform:none;letter-spacing:0">(uma por linha — ex: Troca de óleo)</span></label>
+        <textarea id="maq-prevs" placeholder="Troca de óleo lubrificante&#10;Limpeza geral&#10;Verificação de correias&#10;Inspeção elétrica" style="min-height:100px"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="fecharModal('modal-maquina')">Cancelar</button>
+      <button class="modal-btn confirm" onclick="salvarMaquina()">Salvar</button>
+    </div>
+  </div>
+</div>
 
 </div><!-- /app -->
 
@@ -822,6 +899,7 @@ const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
 const kanbanRef    = ref(db, 'manutencao/kanban');
+const maquinasRef  = ref(db, 'manutencao/maquinas');
 const prevRef      = ref(db, 'manutencao/preventivas');
 const pecasRef     = ref(db, 'manutencao/pecas');
 const historicoRef = ref(db, 'manutencao/historico');
@@ -863,6 +941,16 @@ window._fbUpdatePrev = (key, data) => update(ref(db, `manutencao/preventivas/${k
 window._fbRemovePrev = (key) => remove(ref(db, `manutencao/preventivas/${key}`));
 window._fbPushPeca = (p) => push(pecasRef, p);
 window._fbPushHist = (h) => push(historicoRef, h);
+onValue(maquinasRef, snap => {
+  const val = snap.val();
+  state.maquinas = val ? Object.entries(val).map(([k,v]) => ({...v, _key:k})) : [];
+  renderMaquinas();
+  populatePvMaquinaSelect();
+});
+
+window._fbPushMaquina  = (m) => push(maquinasRef, m);
+window._fbUpdateMaquina = (key, data) => update(ref(db, `manutencao/maquinas/${key}`), data);
+window._fbRemoveMaquina = (key) => remove(ref(db, `manutencao/maquinas/${key}`));
 window._fbReady = true;
 
 // Para limpar dados de teste: abra o console e execute window._resetDB()
@@ -895,6 +983,7 @@ const state = {
   preventivas: [],
   pecas: [],
   historico: [],
+  maquinas: [],
 };
 
 let kFilter = 'todos';
@@ -1154,12 +1243,13 @@ function _executarMove(key, col, responsavel) {
     const c = state.cards.find(x => x._key === key);
     if (c && window._fbPushHist) {
       window._fbPushHist({
-        equip: c.equip || '—',
+        equip: c.equip || c.titulo || '—',
         tipo:  c.tipo === 'preventiva' ? 'Preventiva' : 'Corretiva',
-        desc:  c.titulo + (c.desc ? ' — ' + c.desc : ''),
+        desc:  c.titulo + (c.desc ? ' · ' + c.desc : ''),
         pecas: '—',
         data:  todayStr(),
-        resp:  state.user,
+        hora:  nowStr(),
+        resp:  responsavel,
         horas: 0,
         custo: 0,
       });
@@ -1298,45 +1388,68 @@ let editandoPrevKey = null;
 
 function abrirModalPreventiva(key) {
   editandoPrevKey = key || null;
+  populatePvMaquinaSelect();
   const modal = document.getElementById('modal-preventiva');
-  const titulo = modal.querySelector('.modal-title');
+  const titulo = document.getElementById('pv-modal-title');
+  document.getElementById('pv-tarefa-custom-wrap').style.display = 'none';
 
   if (key) {
-    // Modo edição — preenche campos
     const p = state.preventivas.find(x => (x._key || x.id) === key);
     if (!p) return;
     titulo.textContent = 'Editar Preventiva';
+    // Seleciona máquina pelo maqKey salvo ou pela correspondência de nome
+    document.getElementById('pv-maquina').value = p.maqKey || '';
+    if (p.maqKey) onPvMaquinaChange();
+    // Preenche tarefa
+    const tarefaSel = document.getElementById('pv-tarefa-sel');
+    // Tenta selecionar a tarefa na lista
+    let found = false;
+    for (let opt of tarefaSel.options) {
+      if (opt.value === p.tarefa) { tarefaSel.value = p.tarefa; found = true; break; }
+    }
+    if (!found) {
+      tarefaSel.value = '__outro__';
+      document.getElementById('pv-tarefa-custom-wrap').style.display = '';
+    }
     document.getElementById('pv-tarefa').value = p.tarefa || '';
-    document.getElementById('pv-equip').value  = p.equip  || '';
     document.getElementById('pv-setor').value  = p.setor  || 'mecanica';
     document.getElementById('pv-freq').value   = p.freq   || 30;
     document.getElementById('pv-ultima').value = p.ultima || todayStr();
     document.getElementById('pv-resp').value   = p.resp   || '';
     document.getElementById('pv-obs').value    = p.obs    || '';
-    document.getElementById('pv-urg').value    = p.urg    || 'prev';
   } else {
-    // Modo novo — limpa campos
     titulo.textContent = 'Nova Preventiva';
-    ['pv-tarefa','pv-equip','pv-resp','pv-obs'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('pv-setor').value = 'mecanica';
-    document.getElementById('pv-freq').value  = 30;
-    document.getElementById('pv-ultima').value = todayStr();
-    document.getElementById('pv-urg').value   = 'prev';
+    document.getElementById('pv-maquina').value = '';
+    document.getElementById('pv-tarefa-sel').innerHTML = '<option value="">Selecionar tarefa...</option>';
+    document.getElementById('pv-tarefa').value  = '';
+    document.getElementById('pv-setor').value   = 'mecanica';
+    document.getElementById('pv-freq').value    = 30;
+    document.getElementById('pv-ultima').value  = todayStr();
+    document.getElementById('pv-resp').value    = '';
+    document.getElementById('pv-obs').value     = '';
   }
   modal.classList.add('open');
 }
 function salvarPreventiva() {
-  const tarefa = document.getElementById('pv-tarefa').value.trim();
-  if (!tarefa) return;
+  const tarefaSel = document.getElementById('pv-tarefa-sel').value;
+  const tarefaCustom = document.getElementById('pv-tarefa').value.trim();
+  const tarefa = (tarefaSel === '__outro__' || !tarefaSel) ? tarefaCustom : tarefaSel;
+  if (!tarefa) { alert('Selecione ou descreva uma tarefa.'); return; }
+
+  const maqKey = document.getElementById('pv-maquina').value;
+  const maq = state.maquinas.find(m => m._key === maqKey);
+  const equip = maq ? (maq.tag ? maq.tag + ' · ' + maq.nome : maq.nome) : '';
+
   const pv = {
     tarefa,
-    equip:  document.getElementById('pv-equip').value.trim(),
+    equip,
+    maqKey: maqKey || '',
     setor:  document.getElementById('pv-setor').value,
     freq:   parseInt(document.getElementById('pv-freq').value),
     ultima: document.getElementById('pv-ultima').value,
-    resp:   document.getElementById('pv-resp').value.trim(),
+    resp:   document.getElementById('pv-resp').value,
     obs:    document.getElementById('pv-obs').value.trim(),
-    urg:    document.getElementById('pv-urg').value,
+    urg:    'alta', // preventivas vencidas sempre viram alta
   };
   if (editandoPrevKey) {
     window._fbUpdatePrev(editandoPrevKey, pv);
@@ -1401,7 +1514,12 @@ function renderCalendario() {
     const key = prox.toISOString().split('T')[0];
     if (!eventMap[key]) eventMap[key] = [];
     const overdue = prox < todayD;
-    eventMap[key].push({ label: p.tarefa.length > 20 ? p.tarefa.substring(0,18)+'…' : p.tarefa, overdue, equip: p.equip });
+    // Monta label: TAG · Tarefa (ex: RET-01 · Troca de óleo)
+    const maq = state.maquinas.find(m => m._key === p.maqKey);
+    const tag = maq && maq.tag ? maq.tag : (p.equip ? p.equip.split('·')[0].trim() : '');
+    const tarefaShort = p.tarefa.length > 16 ? p.tarefa.substring(0,14)+'…' : p.tarefa;
+    const label = tag ? tag + ' · ' + tarefaShort : tarefaShort;
+    eventMap[key].push({ label, overdue, equip: p.equip, tarefa: p.tarefa });
   });
   const months = [-1, 0, 1, 2].map(offset => new Date(todayD.getFullYear(), todayD.getMonth() + offset, 1));
   const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -1525,6 +1643,142 @@ function agendarRenotif(card) {
   }, 24 * 60 * 60 * 1000); // 24 horas
 }
 
+
+// ── MÁQUINAS ─────────────────────────────────────────────
+let editandoMaqKey = null;
+
+function renderMaquinas() {
+  const el = document.getElementById('maquinas-grid');
+  if (!el) return;
+  if (!state.maquinas.length) {
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Nenhuma máquina cadastrada. Clique em + Máquina para começar.</div>';
+    return;
+  }
+  el.innerHTML = state.maquinas.map(m => {
+    const prevs = Array.isArray(m.prevs) ? m.prevs : (m.prevs ? m.prevs.split('\n').filter(Boolean) : []);
+    return `
+    <div class="maquina-card">
+      <div class="maquina-top">
+        <div>
+          <div class="maquina-nome">${m.nome}</div>
+          <div class="maquina-tag">${m.tag || ''} · ${m.setor === 'eletrica' ? '⚡ Elétrica' : '⚙️ Mecânica'}</div>
+        </div>
+        <div style="display:flex;gap:4px">
+          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" onclick="abrirModalMaquina('${m._key}')">✏️</button>
+          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarMaquina('${m._key}')">✕</button>
+        </div>
+      </div>
+      <div class="maquina-body">
+        <div class="maquina-meta">
+          ${m.modelo ? `<div class="maquina-meta-item"><span class="maquina-meta-label">Modelo</span><span class="maquina-meta-val">${m.modelo}</span></div>` : ''}
+          ${m.ano    ? `<div class="maquina-meta-item"><span class="maquina-meta-label">Ano</span><span class="maquina-meta-val">${m.ano}</span></div>` : ''}
+        </div>
+        ${prevs.length ? `
+        <div class="maquina-prevs">
+          <div class="maquina-prevs-title">Preventivas padrão (${prevs.length})</div>
+          ${prevs.map(p => `<div class="maquina-prev-item"><span>${p}</span></div>`).join('')}
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function abrirModalMaquina(key) {
+  editandoMaqKey = key || null;
+  const titulo = document.getElementById('maq-modal-title');
+  if (key) {
+    const m = state.maquinas.find(x => x._key === key);
+    if (!m) return;
+    titulo.textContent = 'Editar Máquina';
+    document.getElementById('maq-nome').value   = m.nome   || '';
+    document.getElementById('maq-tag').value    = m.tag    || '';
+    document.getElementById('maq-setor').value  = m.setor  || 'mecanica';
+    document.getElementById('maq-ano').value    = m.ano    || '';
+    document.getElementById('maq-modelo').value = m.modelo || '';
+    const prevs = Array.isArray(m.prevs) ? m.prevs : (m.prevs ? m.prevs.split('\n').filter(Boolean) : []);
+    document.getElementById('maq-prevs').value  = prevs.join('\n');
+  } else {
+    titulo.textContent = 'Nova Máquina';
+    ['maq-nome','maq-tag','maq-ano','maq-modelo','maq-prevs'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('maq-setor').value = 'mecanica';
+  }
+  document.getElementById('modal-maquina').classList.add('open');
+}
+
+function salvarMaquina() {
+  const nome = document.getElementById('maq-nome').value.trim();
+  if (!nome) return;
+  const prevsText = document.getElementById('maq-prevs').value;
+  const prevs = prevsText.split('\n').map(s => s.trim()).filter(Boolean);
+  const m = {
+    nome,
+    tag:    document.getElementById('maq-tag').value.trim(),
+    setor:  document.getElementById('maq-setor').value,
+    ano:    document.getElementById('maq-ano').value,
+    modelo: document.getElementById('maq-modelo').value.trim(),
+    prevs,
+  };
+  if (editandoMaqKey) {
+    window._fbUpdateMaquina(editandoMaqKey, m);
+  } else {
+    window._fbPushMaquina(m);
+  }
+  editandoMaqKey = null;
+  fecharModal('modal-maquina');
+}
+
+function deletarMaquina(key) {
+  if (!confirm('Remover esta máquina?')) return;
+  window._fbRemoveMaquina(key);
+}
+
+function populatePvMaquinaSelect() {
+  const sel = document.getElementById('pv-maquina');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="">Selecionar máquina...</option>' +
+    state.maquinas.map(m => `<option value="${m._key}">${m.tag ? m.tag + ' · ' : ''}${m.nome}</option>`).join('');
+  if (current) sel.value = current;
+}
+
+function onPvMaquinaChange() {
+  const key = document.getElementById('pv-maquina').value;
+  const sel = document.getElementById('pv-tarefa-sel');
+  sel.innerHTML = '<option value="">Selecionar tarefa...</option>';
+  document.getElementById('pv-tarefa-custom-wrap').style.display = 'none';
+
+  if (!key) return;
+  const m = state.maquinas.find(x => x._key === key);
+  if (!m) return;
+
+  // Preenche setor automaticamente
+  document.getElementById('pv-setor').value = m.setor || 'mecanica';
+
+  // Popula tarefas
+  const prevs = Array.isArray(m.prevs) ? m.prevs : (m.prevs ? m.prevs.split('\n').filter(Boolean) : []);
+  prevs.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p; opt.textContent = p;
+    sel.appendChild(opt);
+  });
+  const outroOpt = document.createElement('option');
+  outroOpt.value = '__outro__'; outroOpt.textContent = '+ Outra tarefa...';
+  sel.appendChild(outroOpt);
+}
+
+function onPvTarefaChange() {
+  const val = document.getElementById('pv-tarefa-sel').value;
+  const wrap = document.getElementById('pv-tarefa-custom-wrap');
+  if (val === '__outro__') {
+    wrap.style.display = '';
+    document.getElementById('pv-tarefa').value = '';
+    setTimeout(() => document.getElementById('pv-tarefa').focus(), 50);
+  } else {
+    wrap.style.display = 'none';
+    document.getElementById('pv-tarefa').value = val;
+  }
+}
+
 // ── MODAL UTIL ────────────────────────────────────────
 function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
 
@@ -1552,6 +1806,8 @@ Object.assign(window, {
   abrirModalPreventiva, salvarPreventiva, executarPreventiva, deletarPreventiva,
   fecharModal,
   renderCalendario, initNotificacoes, mostrarNotif,
+  renderMaquinas, abrirModalMaquina, salvarMaquina, deletarMaquina,
+  populatePvMaquinaSelect, onPvMaquinaChange, onPvTarefaChange,
   abrirModalMover, confirmarMove, cancelarMove, setKFilterSel,
 });
 
