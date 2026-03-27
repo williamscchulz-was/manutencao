@@ -314,33 +314,12 @@ body.is-admin .tab-btn.admin-only { display: block; }
 .sv-orange { color: var(--orange); }
 .sv-red { color: var(--red); }
 
-/* ── PECAS GRID ── */
-.pecas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 12px; }
-.peca-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 15px 16px; display: flex; flex-direction: column; gap: 9px; }
-.peca-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.peca-name { font-size: 0.8rem; font-weight: 600; color: var(--text); }
-.peca-code { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-top: 2px; }
-.peca-qty { font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 500; line-height: 1; text-align: right; }
-.peca-qty-label { font-size: 0.54rem; color: var(--muted); text-align: right; }
-.peca-foot { font-size: 0.62rem; color: var(--muted); padding-top: 8px; border-top: 1px solid var(--border); }
+
 .qty-ok { color: var(--green); }
 .qty-low { color: var(--orange); }
 .qty-out { color: var(--red); }
 
-/* ── TIMELINE ── */
-.timeline { position: relative; padding-left: 28px; }
-.timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: var(--border); border-radius: 2px; }
-.timeline-item { position: relative; margin-bottom: 16px; }
-.timeline-item::before { content: ''; position: absolute; left: -24px; top: 13px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--surface); background: var(--green-md); z-index: 1; }
-.timeline-item.corr::before { background: var(--red); }
-.timeline-item.troca::before { background: var(--blue); }
-.tl-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px 16px; }
-.tl-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 7px; }
-.tl-title { font-size: 0.78rem; font-weight: 600; color: var(--text); }
-.tl-date { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); white-space: nowrap; }
-.tl-desc { font-size: 0.72rem; color: var(--text2); line-height: 1.5; margin-bottom: 8px; }
-.tl-meta { display: flex; gap: 8px; flex-wrap: wrap; }
-.tl-tag { font-size: 0.58rem; font-weight: 500; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 3px 8px; border-radius: 5px; }
+
 
 /* ── MODAL ── */
 .modal-bg { display: none; position: fixed; inset: 0; background: rgba(26,46,32,0.35); backdrop-filter: blur(3px); z-index: 200; align-items: center; justify-content: center; }
@@ -411,6 +390,64 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 .divider { height: 1.5px; background: var(--border); margin: 22px 0; }
 .empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: 0.78rem; }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: var(--border); border-radius: 2px; }
+.timeline-item { position: relative; margin-bottom: 16px; }
+.timeline-item::before { content: ''; position: absolute; left: -24px; top: 13px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--surface); background: var(--blue-md); z-index: 1; }
+.timeline-item.corr::before { background: var(--red); }
+.timeline-item.troca::before { background: var(--blue); }
+.tl-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px 16px; }
+.tl-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 7px; }
+.tl-title { font-size: 0.78rem; font-weight: 600; color: var(--text); }
+.tl-date { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); white-space: nowrap; }
+.tl-desc { font-size: 0.72rem; color: var(--text2); line-height: 1.5; margin-bottom: 8px; }
+.tl-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.tl-tag { font-size: 0.58rem; font-weight: 500; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 3px 8px; border-radius: 5px; }
+
+
+/* ── CALENDÁRIO ── */
+.cal-wrap { margin-top: 28px; }
+.cal-month-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 24px; }
+.cal-dow { text-align: center; font-size: 0.55rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 6px 0 8px; }
+.cal-day {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  min-height: 72px;
+  padding: 6px 7px;
+  vertical-align: top;
+  transition: box-shadow 0.15s;
+  position: relative;
+}
+.cal-day:hover { box-shadow: 0 2px 10px rgba(0,118,190,0.1); }
+.cal-day.empty { background: transparent; border-color: transparent; }
+.cal-day.today { border-color: var(--blue); border-width: 2px; }
+.cal-day.has-event { background: var(--blue-lt); border-color: var(--blue-md); }
+.cal-day.overdue { background: var(--red-lt); border-color: var(--red-md); }
+.cal-day-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500; color: var(--muted); margin-bottom: 4px; }
+.cal-day.today .cal-day-num { color: var(--blue); font-weight: 700; }
+.cal-event {
+  font-size: 0.58rem;
+  font-weight: 500;
+  color: var(--blue);
+  background: rgba(0,118,190,0.1);
+  border-radius: 4px;
+  padding: 2px 5px;
+  margin-bottom: 2px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+.cal-event.overdue { color: var(--red); background: rgba(217,64,64,0.1); }
+.cal-legend { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.cal-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.62rem; color: var(--muted); }
+.cal-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
 </style>
 </head>
 <body>
@@ -438,6 +475,22 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
   <div class="header">
     <div class="logo">Fio<em>bras</em> <span style="font-size:0.62rem;font-weight:400;color:rgba(255,255,255,0.6);margin-left:6px;letter-spacing:1px;text-transform:uppercase">Manutenção</span></div>
+    <div id="header-stats" style="display:flex;align-items:center;gap:20px;opacity:0;transition:opacity 0.3s">
+      <div style="text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;color:#fff;line-height:1" id="hs-total">0</div>
+        <div style="font-size:0.5rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.55)">Total</div>
+      </div>
+      <div style="width:1px;height:28px;background:rgba(255,255,255,0.2)"></div>
+      <div style="text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;color:#7ee8a2;line-height:1" id="hs-done">0</div>
+        <div style="font-size:0.5rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.55)">Concluídas</div>
+      </div>
+      <div style="width:1px;height:28px;background:rgba(255,255,255,0.2)"></div>
+      <div style="text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;color:#ffd97d;line-height:1" id="hs-atraso">0%</div>
+        <div style="font-size:0.5rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.55)">Em atraso</div>
+      </div>
+    </div>
     <div class="header-right">
       <div class="user-badge">
         <div>
@@ -452,7 +505,6 @@ body.is-admin .tab-btn.admin-only { display: block; }
   <div class="tabs" id="main-tabs">
     <button class="tab-btn active" onclick="switchTab('kanban',this)" id="tab-kanban">Kanban</button>
     <button class="tab-btn admin-only" onclick="switchTab('preventiva',this)">Preventiva</button>
-    <button class="tab-btn admin-only" onclick="switchTab('pecas',this)">Peças</button>
     <button class="tab-btn admin-only" onclick="switchTab('historico',this)">Histórico</button>
   </div>
 
@@ -507,7 +559,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
   <div class="container">
     <div class="sec-header">
       <div class="sec-title">Plano Preventivo</div>
-      <button class="btn-primary" onclick="abrirModalPreventiva()">+ Nova tarefa</button>
+      <button class="btn-primary" onclick="abrirModalPreventiva()">+ Preventiva</button>
     </div>
     <div class="table-wrap">
       <table class="data-table">
@@ -518,30 +570,33 @@ body.is-admin .tab-btn.admin-only { display: block; }
         <tbody id="prev-tbody"></tbody>
       </table>
     </div>
+    <!-- CALENDÁRIO -->
+    <div class="cal-wrap">
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--blue-lt);border:1.5px solid var(--blue-md)"></div>Preventiva agendada</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--red-lt);border:1.5px solid var(--red-md)"></div>Vencida / Em atraso</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--surface);border:2px solid var(--blue)"></div>Hoje</div>
+      </div>
+      <div id="cal-container"></div>
+    </div>
   </div>
   </div>
 
-  <!-- ── PEÇAS ── -->
-  <div class="panel" id="panel-pecas">
-  <div class="container">
-    <div class="sec-header">
-      <div class="sec-title">Estoque de Peças</div>
-      <button class="btn-primary" onclick="abrirModalPeca()">+ Nova peça</button>
-    </div>
-    <div class="pecas-grid" id="pecas-grid"></div>
   </div>
-  </div>
+
 
   <!-- ── HISTÓRICO ── -->
   <div class="panel" id="panel-historico">
   <div class="container">
     <div class="sec-header">
-      <div class="sec-title">Histórico</div>
-      <button class="btn-primary" onclick="abrirModalRegistro()">+ Registrar</button>
+      <div class="sec-title">Histórico de Manutenções</div>
+
     </div>
-    <div class="timeline" id="hist-timeline"></div>
+    <div class="timeline" id="hist-timeline"><div class="empty-state">Nenhuma manutenção registrada ainda.</div></div>
   </div>
   </div>
+
+    </div>
 
 
 <!-- MODAL MOVER CARD -->
@@ -551,7 +606,16 @@ body.is-admin .tab-btn.admin-only { display: block; }
     <div class="modal-grid">
       <div class="field">
         <label>Responsável pela alteração</label>
-        <input id="mv-nome" placeholder="Seu nome" autocomplete="off">
+        <select id="mv-nome" style="background:var(--bg);border:1.5px solid var(--border2);border-radius:7px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.8rem;padding:9px 12px;outline:none;width:100%">
+          <option value="">Selecionar responsável...</option>
+          <option>Joacir</option>
+          <option>Eugênio</option>
+          <option>Hernandes</option>
+          <option>Vorlei</option>
+          <option>Pedro</option>
+          <option>Ivonei</option>
+          <option>Roland</option>
+        </select>
       </div>
       <div class="field">
         <label>Horário</label>
@@ -565,6 +629,8 @@ body.is-admin .tab-btn.admin-only { display: block; }
     </div>
   </div>
 </div>
+
+
 
 </div><!-- /app -->
 
@@ -695,62 +761,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
   </div>
 </div>
 
-<!-- PEÇA -->
-<div class="modal-bg" id="modal-peca">
-  <div class="modal">
-    <div class="modal-title">Nova Peça</div>
-    <div class="modal-grid">
-      <div class="modal-row">
-        <div class="field"><label>Nome</label><input id="pc-nome" placeholder="Rolamento 6205"></div>
-        <div class="field"><label>Código</label><input id="pc-cod" placeholder="ROL-6205"></div>
-      </div>
-      <div class="modal-row">
-        <div class="field"><label>Quantidade</label><input id="pc-qty" type="number" min="0" placeholder="10"></div>
-        <div class="field"><label>Mínimo</label><input id="pc-min" type="number" min="0" placeholder="3"></div>
-      </div>
-      <div class="modal-row">
-        <div class="field"><label>Fornecedor</label><input id="pc-forn" placeholder="SKF Brasil"></div>
-        <div class="field"><label>Valor unit. (R$)</label><input id="pc-val" type="number" step="0.01" placeholder="45.00"></div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="modal-btn cancel" onclick="fecharModal('modal-peca')">Cancelar</button>
-      <button class="modal-btn confirm" onclick="salvarPeca()">Salvar</button>
-    </div>
-  </div>
-</div>
 
-<!-- REGISTRO HISTÓRICO -->
-<div class="modal-bg" id="modal-registro">
-  <div class="modal">
-    <div class="modal-title">Registrar Manutenção</div>
-    <div class="modal-grid">
-      <div class="modal-row">
-        <div class="field"><label>Equipamento</label><input id="rg-equip" placeholder="Nome do equipamento"></div>
-        <div class="field"><label>Tipo</label>
-          <select id="rg-tipo">
-            <option>Preventiva</option><option>Corretiva</option>
-            <option>Troca de peça</option><option>Inspeção</option>
-          </select>
-        </div>
-      </div>
-      <div class="field"><label>Descrição</label><textarea id="rg-desc" placeholder="O que foi feito..."></textarea></div>
-      <div class="field"><label>Peças trocadas</label><input id="rg-pecas" placeholder="Rolamento 6205, Correia A40"></div>
-      <div class="modal-row">
-        <div class="field"><label>Data</label><input id="rg-data" type="date"></div>
-        <div class="field"><label>Responsável</label><input id="rg-resp" placeholder="Técnico"></div>
-      </div>
-      <div class="modal-row">
-        <div class="field"><label>Horas paradas</label><input id="rg-horas" type="number" step="0.5" placeholder="2.5"></div>
-        <div class="field"><label>Custo (R$)</label><input id="rg-custo" type="number" step="0.01" placeholder="0.00"></div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="modal-btn cancel" onclick="fecharModal('modal-registro')">Cancelar</button>
-      <button class="modal-btn confirm" onclick="salvarRegistro()">Registrar</button>
-    </div>
-  </div>
-</div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -829,20 +840,9 @@ let urgSelected = 'media';
 let dragCard = null;
 
 // ── DEFAULT DATA ──────────────────────────────────────
-const DEFAULT_PREV = [
-  { id:'pv1', tarefa:'Troca de óleo lubrificante', equip:'Retorcedeira #1', setor:'mecanica', freq:30, ultima:'2026-02-25', resp:'João Silva', obs:'Óleo ISO 68', urg:'prev' },
-  { id:'pv2', tarefa:'Limpeza filtros de ar',      equip:'Compressor',      setor:'mecanica', freq:15, ultima:'2026-03-10', resp:'Carlos Mendes', obs:'', urg:'prev' },
-  { id:'pv3', tarefa:'Verificação tensão correias', equip:'Tingidora Principal', setor:'mecanica', freq:30, ultima:'2026-02-20', resp:'Marcos Lima', obs:'280N', urg:'prev' },
-  { id:'pv4', tarefa:'Inspeção elétrica geral',     equip:'Retorcedeira #3', setor:'eletrica', freq:90,  ultima:'2025-12-01', resp:'João Silva', obs:'', urg:'alta' },
-  { id:'pv5', tarefa:'Calibração sensores',          equip:'Tingidora Principal', setor:'eletrica', freq:90, ultima:'2026-01-10', resp:'Marcos Lima', obs:'', urg:'prev' },
-];
+const DEFAULT_PREV = [];
 
-const DEFAULT_PECAS = [
-  { nome:'Rolamento 6205-2RS', cod:'ROL-6205', qty:12, min:4, forn:'SKF Brasil', val:45.00 },
-  { nome:'Correia A40',         cod:'COR-A40',  qty:2,  min:3, forn:'Gates',     val:28.50 },
-  { nome:'Filtro óleo 10µ',    cod:'FIL-010',  qty:6,  min:2, forn:'Parker',    val:67.00 },
-  { nome:'Retentor 35x50x8',   cod:'RET-3550', qty:0,  min:2, forn:'Corteco',   val:18.00 },
-];
+const DEFAULT_PECAS = [];
 
 // ── LOGIN ─────────────────────────────────────────────
 function doLogin() {
@@ -931,6 +931,25 @@ function gerarCardsPreventivas() {
 }
 
 // ── KANBAN RENDER ─────────────────────────────────────
+function updateHeaderStats() {
+  const total = state.cards.length;
+  const done  = state.cards.filter(c => c.col === 'done').length;
+  // "Em atraso" = cards em 'todo' que vieram de preventiva vencida há mais de 2 dias
+  const atraso = state.cards.filter(c => {
+    if (c.col === 'done') return false;
+    if (c.tipo !== 'preventiva') return false;
+    // card criado há mais de 2 dias sem ser movido
+    return true; // simplificado: toda preventiva em todo conta como potencial atraso
+  }).length;
+  const pct = total > 0 ? Math.round((atraso / total) * 100) : 0;
+  const el = document.getElementById('header-stats');
+  if (el) {
+    el.style.opacity = '1';
+    document.getElementById('hs-total').textContent = total;
+    document.getElementById('hs-done').textContent  = done;
+    document.getElementById('hs-atraso').textContent = pct + '%';
+  }
+}
 function renderKanban() {
   ['todo','doing','done'].forEach(col => {
     let cards = state.cards.filter(c => c.col === col);
@@ -941,7 +960,8 @@ function renderKanban() {
     if (kFilter === 'demanda')    cards = cards.filter(c => c.tipo === 'demanda' || c.tipo === 'corretiva');
     if (kFilter === 'alta')       cards = cards.filter(c => c.urg === 'alta');
 
-    // Ordena: alta > media > baixa/prev, dentro de cada col
+    updateHeaderStats();
+  // Ordena: alta > media > baixa/prev, dentro de cada col
     const urgOrd = {alta:0,media:1,prev:2,baixa:3};
     cards.sort((a,b) => (urgOrd[a.urg]||2) - (urgOrd[b.urg]||2));
 
@@ -1072,7 +1092,7 @@ function abrirModalMover(key, col, card) {
   setTimeout(() => document.getElementById('mv-nome').focus(), 80);
 }
 function confirmarMove() {
-  const resp = document.getElementById('mv-nome').value.trim();
+  const resp = document.getElementById('mv-nome').value;
   if (!resp) { document.getElementById('mv-nome').style.borderColor = 'var(--red)'; return; }
   document.getElementById('mv-nome').style.borderColor = '';
   if (!pendingMove) return;
@@ -1155,6 +1175,7 @@ function salvarCardAdmin() {
 
 // ── PREVENTIVA ────────────────────────────────────────
 function renderPreventiva() {
+  renderCalendario();
   const tbody = document.getElementById('prev-tbody');
   if (!tbody) return;
   const freqMap = {7:'Semanal',15:'Quinzenal',30:'Mensal',90:'Trimestral',180:'Semestral',365:'Anual'};
@@ -1206,44 +1227,9 @@ function executarPreventiva(key) {
 }
 
 // ── PEÇAS ─────────────────────────────────────────────
-function renderPecas() {
-  const el = document.getElementById('pecas-grid');
-  if (!el) return;
-  el.innerHTML = state.pecas.map(p => {
-    const qCls = p.qty === 0 ? 'qty-out' : p.qty < p.min ? 'qty-low' : 'qty-ok';
-    const bCls = p.qty === 0 ? 'badge-red' : p.qty < p.min ? 'badge-orange' : 'badge-green';
-    const bTxt = p.qty === 0 ? 'Zerado' : p.qty < p.min ? 'Estoque baixo' : 'OK';
-    return `<div class="peca-card">
-      <div class="peca-top">
-        <div>
-          <div class="peca-name">${p.nome}</div>
-          <div class="peca-code">${p.cod}</div>
-        </div>
-        <div>
-          <div class="peca-qty ${qCls}">${p.qty}</div>
-          <div class="peca-qty-label">un.</div>
-        </div>
-      </div>
-      <span class="badge ${bCls}">${bTxt}</span>
-      <div class="peca-foot">Mín: ${p.min} · ${p.forn} · R$ ${p.val.toFixed(2).replace('.',',')}</div>
-    </div>`;
-  }).join('');
-}
-function abrirModalPeca() { document.getElementById('modal-peca').classList.add('open'); }
-function salvarPeca() {
-  const nome = document.getElementById('pc-nome').value.trim();
-  if (!nome) return;
-  window._fbPushPeca({
-    nome, cod: document.getElementById('pc-cod').value.trim(),
-    qty: parseInt(document.getElementById('pc-qty').value)||0,
-    min: parseInt(document.getElementById('pc-min').value)||0,
-    forn: document.getElementById('pc-forn').value.trim(),
-    val: parseFloat(document.getElementById('pc-val').value)||0,
-  });
-  fecharModal('modal-peca');
-}
 
-// ── HISTÓRICO ─────────────────────────────────────────
+
+
 function renderHistorico() {
   const el = document.getElementById('hist-timeline');
   if (!el) return;
@@ -1267,31 +1253,54 @@ function renderHistorico() {
       </div>
     </div>`).join('');
 }
-function abrirModalRegistro() {
-  document.getElementById('rg-data').value = todayStr();
-  document.getElementById('modal-registro').classList.add('open');
-}
-function salvarRegistro() {
-  const desc = document.getElementById('rg-desc').value.trim();
-  if (!desc) return;
-  window._fbPushHist({
-    equip: document.getElementById('rg-equip').value.trim(),
-    tipo:  document.getElementById('rg-tipo').value,
-    desc,
-    pecas: document.getElementById('rg-pecas').value.trim()||'—',
-    data:  document.getElementById('rg-data').value,
-    resp:  document.getElementById('rg-resp').value.trim(),
-    horas: parseFloat(document.getElementById('rg-horas').value)||0,
-    custo: parseFloat(document.getElementById('rg-custo').value)||0,
+
+
+function renderCalendario() {
+  const container = document.getElementById('cal-container');
+  if (!container) return;
+  const todayD = today();
+  const eventMap = {};
+  state.preventivas.forEach(p => {
+    if (!p.ultima) return;
+    const prox = addDays(parseDt(p.ultima), parseInt(p.freq));
+    const key = prox.toISOString().split('T')[0];
+    if (!eventMap[key]) eventMap[key] = [];
+    const overdue = prox < todayD;
+    eventMap[key].push({ label: p.tarefa.length > 20 ? p.tarefa.substring(0,18)+'…' : p.tarefa, overdue, equip: p.equip });
   });
-  fecharModal('modal-registro');
+  const months = [-1, 0, 1, 2].map(offset => new Date(todayD.getFullYear(), todayD.getMonth() + offset, 1));
+  const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const dows = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  container.innerHTML = months.map(monthStart => {
+    const year = monthStart.getFullYear();
+    const month = monthStart.getMonth();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    let startDow = monthStart.getDay();
+    startDow = startDow === 0 ? 6 : startDow - 1;
+    let cells = '';
+    for (let i=0; i<startDow; i++) cells += '<div class="cal-day empty"></div>';
+    for (let d=1; d<=daysInMonth; d++) {
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const isToday = dateStr === todayStr();
+      const events = eventMap[dateStr] || [];
+      const hasOverdue = events.some(e => e.overdue);
+      const hasEvent = events.length > 0;
+      const cls = ['cal-day', isToday?'today':'', hasOverdue?'overdue':hasEvent?'has-event':''].filter(Boolean).join(' ');
+      const evHtml = events.slice(0,3).map(e =>
+        `<div class="cal-event ${e.overdue?'overdue':''}" title="${e.equip}: ${e.label}">${e.label}</div>`
+      ).join('');
+      cells += `<div class="${cls}"><div class="cal-day-num">${d}</div>${evHtml}</div>`;
+    }
+    return `<div class="cal-month-title">${monthNames[month]} ${year}</div>
+      <div class="cal-grid">${dows.map(d=>`<div class="cal-dow">${d}</div>`).join('')}${cells}</div>`;
+  }).join('');
 }
 
 // ── MODAL UTIL ────────────────────────────────────────
 function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
 
 document.addEventListener('click', e => {
-  ['modal-demanda','modal-card-admin','modal-preventiva','modal-peca','modal-registro'].forEach(id => {
+  ['modal-demanda','modal-card-admin','modal-preventiva'].forEach(id => {
     if (e.target === document.getElementById(id)) fecharModal(id);
   });
 });
@@ -1312,9 +1321,8 @@ Object.assign(window, {
   abrirModalDemanda, selUrg, enviarDemanda,
   abrirModalCardAdmin, salvarCardAdmin,
   abrirModalPreventiva, salvarPreventiva, executarPreventiva,
-  abrirModalPeca, salvarPeca,
-  abrirModalRegistro, salvarRegistro,
   fecharModal,
+  renderCalendario,
   abrirModalMover, confirmarMove, cancelarMove, setKFilterSel,
 });
 </script>
