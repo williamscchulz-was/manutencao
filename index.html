@@ -832,6 +832,7 @@ onValue(kanbanRef, snap => {
   state.cards = val ? Object.entries(val).map(([k,v]) => ({...v, _key:k})) : [];
   // Gera cards de preventivas vencidas que ainda não têm card
   gerarCardsPreventivas();
+  limparCardsOrfaos();
   checkNotifNovosCards(state.cards);
   renderKanban();
 });
@@ -971,6 +972,16 @@ function setorBadge(s) {
 }
 
 // ── GERAR CARDS DE PREVENTIVAS VENCIDAS ───────────────
+function limparCardsOrfaos() {
+  if (!window._fbRemoveCard) return;
+  const prevKeys = new Set(state.preventivas.map(p => p._key || p.id));
+  state.cards.forEach(c => {
+    // Se é card de preventiva mas a preventiva não existe mais → remove
+    if (c.tipo === 'preventiva' && c.prevId && !prevKeys.has(c.prevId)) {
+      window._fbRemoveCard(c._key);
+    }
+  });
+}
 function gerarCardsPreventivas() {
   if (!window._fbReady) return;
   state.preventivas.forEach(p => {
