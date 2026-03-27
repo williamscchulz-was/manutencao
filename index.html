@@ -604,6 +604,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
   top: 0;
   z-index: 50;
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  padding-top: env(safe-area-inset-top);
 }
 .header-row1 {
   display: flex;
@@ -775,7 +776,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
     border-radius: 24px 24px 0 0;
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    padding: 28px 24px 40px;
+    padding: 28px 24px calc(32px + env(safe-area-inset-bottom));
     max-width: 100%;
     width: 100%;
   }
@@ -807,7 +808,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 /* ── BOTTOM NAV FLUTUANTE ── */
 .bottom-nav {
   position: fixed;
-  bottom: 20px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
@@ -821,7 +822,6 @@ body.is-admin .tab-btn.admin-only { display: block; }
   z-index: 40;
   box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
   padding: 0 8px;
-  padding-bottom: env(safe-area-inset-bottom);
 }
 .bnav-btn {
   flex: 1;
@@ -866,6 +866,20 @@ body.is-admin .tab-btn.admin-only { display: block; }
   #print-qr-wrap { display: flex !important; }
 }
 
+
+@keyframes slideDown {
+  from { opacity:0; transform:translateX(-50%) translateY(-20px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity:1; transform:translateX(-50%) translateY(0); }
+  to   { opacity:0; transform:translateX(-50%) translateY(-20px); }
+}
+@media(max-width:768px) {
+  .btn-notif-label { display:none; }
+  #btn-notif-test { padding:7px 9px !important; }
+}
+
 </style>
 
   <meta name="theme-color" content="#0076BE">
@@ -881,7 +895,7 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 <!-- ── SPLASH SCREEN ── -->
 <div id="splash-screen" style="
-  position:fixed;inset:0;z-index:9999;
+  position:fixed;inset:0;z-index:9999;padding-top:env(safe-area-inset-top);
   background:#0076BE;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:0;
@@ -964,7 +978,11 @@ body.is-admin .tab-btn.admin-only { display: block; }
           <div class="role" id="h-role"></div>
         </div>
         <button id="btn-instalar" onclick="window._instalarApp()" class="btn-instalar" style="display:none">📲</button>
-        <button class="btn-logout" onclick="doLogout()">Sair</button>
+        <button id="btn-notif-test" onclick="abrirModalNotifAdmin()" style="display:none;align-items:center;gap:5px;padding:7px 12px;background:rgba(255,203,0,0.15);border:1.5px solid rgba(255,203,0,0.4);border-radius:7px;color:#FFCB00;font-family:'Poppins',sans-serif;font-size:0.62rem;font-weight:600;cursor:pointer;white-space:nowrap" title="Enviar notificação">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="btn-notif-label">Notificar</span>
+    </button>
+    <button class="btn-logout" onclick="doLogout()">Sair</button>
       </div>
     </div>
     <!-- Linha 2: stats -->
@@ -1226,6 +1244,63 @@ body.is-admin .tab-btn.admin-only { display: block; }
   </div>
 </div>
 
+
+<!-- MODAL NOTIFICAÇÃO ADMIN -->
+<div class="modal-bg" id="modal-notif-admin">
+  <div class="modal" style="width:460px">
+    <div class="modal-title">📣 Enviar Notificação</div>
+    <div class="modal-grid">
+      <div class="field">
+        <label>Destinatário</label>
+        <select id="notif-dest" style="background:var(--bg);border:1.5px solid var(--border2);border-radius:7px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.8rem;padding:9px 12px;outline:none;width:100%">
+          <option value="todos">📢 Todos os usuários</option>
+          <option value="hernandes">Hernandes</option>
+          <option value="vorlei">Vorlei</option>
+          <option value="pedro">Pedro</option>
+          <option value="ivonei">Ivonei</option>
+          <option value="roland">Roland</option>
+          <option value="joacir">Joacir</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Título</label>
+        <input id="notif-titulo" placeholder="Ex: Atenção equipe!" value="📣 Fiobras Manutenção">
+      </div>
+      <div class="field">
+        <label>Mensagem</label>
+        <textarea id="notif-msg" placeholder="Digite sua mensagem aqui..." style="min-height:80px"></textarea>
+      </div>
+    </div>
+    <div style="background:var(--blue-lt);border:1px solid var(--blue-md);border-radius:8px;padding:10px 14px;font-size:0.68rem;color:var(--blue);margin-top:12px">
+      💡 Será exibido como notificação push nos celulares e popup na versão web
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="fecharModal('modal-notif-admin')">Cancelar</button>
+      <button class="modal-btn confirm" onclick="enviarNotifAdmin()" style="background:#FFCB00;color:#1a2e20">📣 Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP NOTIFICAÇÃO IN-APP -->
+<div id="inapp-notif" style="
+  display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 32px);max-width:400px;
+  background:#1a2e20;border-radius:16px;
+  padding:16px 18px;z-index:999;
+  box-shadow:0 8px 32px rgba(0,0,0,0.25);
+  animation: slideDown 0.3s ease;
+">
+  <div style="display:flex;align-items:flex-start;gap:12px">
+    <div style="font-size:1.4rem;flex-shrink:0">📣</div>
+    <div style="flex:1">
+      <div id="inapp-titulo" style="font-size:0.8rem;font-weight:700;color:#fff;margin-bottom:3px"></div>
+      <div id="inapp-msg" style="font-size:0.72rem;color:rgba(255,255,255,0.75);line-height:1.4"></div>
+      <div id="inapp-de" style="font-size:0.6rem;color:rgba(255,255,255,0.4);margin-top:5px"></div>
+    </div>
+    <button onclick="fecharInAppNotif()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1rem;padding:0;flex-shrink:0">✕</button>
+  </div>
+</div>
+
 </div><!-- /app -->
 
 <!-- ── MODAIS ── -->
@@ -1407,6 +1482,34 @@ const pecasRef     = ref(db, 'manutencao/pecas');
 const historicoRef = ref(db, 'manutencao/historico');
 
 // ── Sync Firebase → state
+// Monitora notificações FCM pendentes — dispara em todos os devices
+onValue(ref(db, 'manutencao/fcmPending'), snap => {
+  if (!snap.val() || !state.user) return;
+  const items = Object.entries(snap.val());
+  const agora = Date.now();
+  items.forEach(([key, payload]) => {
+    const visto = sessionStorage.getItem('fcm_' + key);
+    if (visto) return;
+    if (!payload.ts || (agora - payload.ts) >= 60000) return;
+    sessionStorage.setItem('fcm_' + key, '1');
+
+    // Verifica destinatário
+    const dest = payload.dest || 'todos';
+    if (dest !== 'todos') {
+      const destNome = USERS[dest] ? USERS[dest].nome : dest;
+      if (destNome !== state.user) return;
+    }
+
+    // Filtra preventivas por responsável (notif automáticas)
+    if (payload.tipo !== 'manual' && !state.isAdmin && payload.resp && payload.resp !== state.user) return;
+
+    // Mostra push + in-app
+    mostrarNotif(payload.titulo, payload.corpo, 'fcm-' + key);
+    exibirInAppNotif(payload.titulo, payload.corpo, payload.de || '');
+    if (navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300]);
+  });
+});
+
 onValue(kanbanRef, snap => {
   const val = snap.val();
   state.cards = val ? Object.entries(val).map(([k,v]) => ({...v, _key:k})) : [];
@@ -1453,7 +1556,14 @@ onValue(maquinasRef, snap => {
 window._fbPushMaquina  = (m) => push(maquinasRef, m);
 window._fbUpdateMaquina = (key, data) => update(ref(db, `manutencao/maquinas/${key}`), data);
 window._fbRemoveMaquina = (key) => remove(ref(db, `manutencao/maquinas/${key}`));
+window._fbPushFCMPending = (payload) => push(ref(db, 'manutencao/fcmPending'), payload);
 window._fbReady = true;
+window._fbSaveToken = (usuario, token) => {
+  const tokenRef = ref(db, 'manutencao/fcmTokens/' + btoa(usuario).replace(/=/g,''));
+  set(tokenRef, { usuario, token, ts: Date.now() })
+    .then(() => console.log('Token FCM salvo para', usuario))
+    .catch(e => console.warn('Erro ao salvar token:', e));
+};
 
 // Para limpar dados de teste: abra o console e execute window._resetDB()
 window._resetDB = () => {
@@ -1475,7 +1585,7 @@ window._resetHistorico = () => {
 </script>
 
 <script>
-const VERSION    = 'v1.8';
+const VERSION    = 'v2.1';
 // Usuários do sistema
 const USERS = {
   'admin':     { senha: 'admin',  isAdmin: true,  nome: 'Admin'     },
@@ -1561,11 +1671,16 @@ function doLogin() {
   } catch(e) {}
   initNotificacoes();
   aplicarQRSeExistir();
+  // FCM: registra token deste dispositivo
+  if (window._swRegistration) initFCMToken(window._swRegistration);
   // Mostrar/esconder abas conforme perfil
   document.querySelectorAll('.admin-only').forEach(el => {
     el.style.display = isAdmin ? '' : 'none';
   });
   // Bottom nav — mostrar/esconder itens admin
+  // Mostrar botão de notificação só para admin
+  const btnNotif = document.getElementById('btn-notif-test');
+  if (btnNotif) btnNotif.style.display = isAdmin ? 'flex' : 'none';
   const bnav = document.getElementById('bottom-nav');
   if (bnav) {
     bnav.style.cssText = ''; // limpa o !important
@@ -1649,6 +1764,15 @@ function gerarCardsPreventivas() {
           prevId: p._key || p.id,
         };
         window._fbPushCard(card);
+        // Notifica via FCM todos os dispositivos logados
+        if (card.urg === 'alta' && window._fbPushFCMPending) {
+          window._fbPushFCMPending({
+            titulo: '🔴 Preventiva urgente — ' + (card.equip || 'Equipamento'),
+            corpo:  card.titulo || 'Manutenção preventiva pendente',
+            ts:     Date.now(),
+            resp:   card.resp || '',
+          });
+        }
       }
     }
   });
@@ -2480,169 +2604,47 @@ function exportarHistorico() {
 
   const sorted = [...state.historico].sort((a,b) => (b.data||'').localeCompare(a.data||''));
 
-  // Gera HTML para impressão/PDF
-  const linhas = sorted.map(h => `
-    <tr>
-      <td>${fmtDt(h.data)}</td>
-      <td>${h.hora || '—'}</td>
-      <td>${h.equip || '—'}</td>
-      <td>${h.tipo || '—'}</td>
-      <td>${h.desc || '—'}</td>
-      <td>${h.resp || '—'}</td>
-    </tr>`).join('');
+  const linhas = sorted.map(h =>
+    '<tr>' +
+    '<td>' + (fmtDt(h.data)||'') + '</td>' +
+    '<td>' + (h.hora||'—') + '</td>' +
+    '<td>' + (h.equip||'—') + '</td>' +
+    '<td>' + (h.tipo||'—') + '</td>' +
+    '<td>' + (h.desc||'—') + '</td>' +
+    '<td>' + (h.resp||'—') + '</td>' +
+    '</tr>'
+  ).join('');
+
+  const css = [
+    'body{font-family:Arial,sans-serif;font-size:12px;color:#1a2e20;margin:24px}',
+    'h1{color:#0076BE;font-size:18px;margin-bottom:4px}',
+    'p{color:#7a9e84;font-size:11px;margin-bottom:20px}',
+    'table{width:100%;border-collapse:collapse}',
+    'th{background:#0076BE;color:#fff;padding:8px 10px;text-align:left;font-size:11px}',
+    'td{padding:7px 10px;border-bottom:1px solid #dde8e1;vertical-align:top}',
+    'tr:nth-child(even) td{background:#f4f7f5}',
+    '@media print{body{margin:12px}}'
+  ].join('');
+
+  const pageHtml =
+    '<!DOCTYPE html><html lang="pt-BR"><head>' +
+    '<meta charset="UTF-8">' +
+    '<title>Historico Fiobras<\/title>' +
+    '\u003cstyle\u003e' + css + '<\/style>' +
+    '<\/head><body>' +
+    '<h1>Fiobras · Histórico de Manutenções<\/h1>' +
+    '<p>Exportado em ' + nowStr() + ' · ' + sorted.length + ' registros<\/p>' +
+    '<table><thead><tr>' +
+    '<th>Data<\/th><th>Hora<\/th><th>Equipamento<\/th><th>Tipo<\/th><th>Descrição<\/th><th>Responsável<\/th>' +
+    '<\/tr><\/thead><tbody>' + linhas + '<\/tbody><\/table>' +
+    '\u003cscript\u003ewindow.onload=function(){window.print();}<\/script>' +
+    '<\/body><\/html>';
 
   const janela = window.open('', '_blank');
-  janela.document.write(`
-    <!DOCTYPE html><html lang="pt-BR"><head>
-    <meta charset="UTF-8">
-    <title>Histórico de Manutenções — Fiobras</title>
-    <style>
-      body { font-family: Arial, sans-serif; font-size: 12px; color: #1a2e20; margin: 24px; }
-      h1 { color: #0076BE; font-size: 18px; margin-bottom: 4px; }
-      p { color: #7a9e84; font-size: 11px; margin-bottom: 20px; }
-      table { width: 100%; border-collapse: collapse; }
-      th { background: #0076BE; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
-      td { padding: 7px 10px; border-bottom: 1px solid #dde8e1; vertical-align: top; }
-      tr:nth-child(even) td { background: #f4f7f5; }
-      @media print { body { margin: 12px; } }
-    
-/* ── SPLASH ── */
-#splash-screen { pointer-events:none; }
-
-
-
-/* Mobile: esconder tabs do topo, mostrar bottom nav */
-@media(max-width: 768px) {
-  .tabs { display: none !important; }
-  #bottom-nav { display: flex !important; }
-  .container { padding-bottom: 100px !important; }
-  .kanban-wrap { padding-bottom: 100px !important; }
-}
-
-/* Desktop: esconder bottom nav */
-@media(min-width: 769px) {
-  #bottom-nav { display: none !important; }
-  .tabs { display: flex !important; }
-}
-
-/* Melhorias gerais mobile Nubank-style */
-@media(max-width: 768px) {
-  /* Login mais clean */
-  .login-screen {
-    background: linear-gradient(160deg, #0076BE 0%, #005a93 100%);
-  }
-  .login-box {
-    border: none;
-    box-shadow: none;
-    background: #fff;
-    border-radius: 24px 24px 0 0;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    padding: 28px 24px 40px;
-    max-width: 100%;
-    width: 100%;
-  }
-  .login-logo { font-size: 1.5rem; margin-bottom: 2px; }
-  .login-sub { margin-bottom: 24px; }
-
-  /* Cards mais generosos */
-  .kanban-card { padding: 16px 15px; border-radius: 14px; margin-bottom: 2px; }
-  .card-title { font-size: 0.88rem; }
-  
-  /* Colunas kanban com visual de seção */
-  .kanban-col { background: transparent; border: none; padding: 0; }
-  .col-header { background: var(--surface); border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; border: 1.5px solid var(--border); }
-  .col-cards { gap: 8px; }
-
-  /* Botões mais gordos para toque */
-  .btn-primary { padding: 14px 20px; font-size: 0.75rem; border-radius: 12px; }
-  .modal-btn { padding: 14px; border-radius: 12px; font-size: 0.72rem; }
-  
-  /* Select login maior */
-  #login-user-sel { font-size: 1rem; padding: 14px; border-radius: 12px; }
-  .login-btn { border-radius: 12px; padding: 15px; font-size: 0.82rem; }
-  
-  /* Checkbox lembrar */
-  #lembrar-check { width: 18px; height: 18px; }
-}
-
-
-/* ── BOTTOM NAV FLUTUANTE ── */
-.bottom-nav {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 32px);
-  max-width: 400px;
-  height: 64px;
-  background: #fff;
-  border-radius: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  z-index: 40;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
-  padding: 0 8px;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.bnav-btn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 6px 4px;
-  color: #aab8c0;
-  transition: color 0.2s;
-}
-.bnav-pill {
-  width: 44px;
-  height: 32px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
-.bnav-btn.active { color: #0076BE; }
-.bnav-btn.active .bnav-pill {
-  background: rgba(0,118,190,0.1);
-}
-.bnav-label {
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.48rem;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  line-height: 1;
-}
-
-
-/* QR Code */
-#qr-canvas canvas, #qr-canvas img { display:block; }
-@media print {
-  body > *:not(#print-qr-wrap) { display: none !important; }
-  #print-qr-wrap { display: flex !important; }
-}
-
-</style></head><body>
-    <h1>Fiobras · Histórico de Manutenções</h1>
-    <p>Exportado em ${nowStr()} · ${sorted.length} registros</p>
-    <table>
-      <thead><tr>
-        <th>Data</th><th>Hora</th><th>Equipamento</th>
-        <th>Tipo</th><th>Descrição</th><th>Responsável</th>
-      </tr></thead>
-      <tbody>${linhas}</tbody>
-    </table>
-    <script>window.onload = () => window.print();<\/script>
-    </body></html>`);
+  janela.document.write(pageHtml);
   janela.document.close();
 }
+
 
 
 // ── SPLASH SCREEN ──────────────────────────────────────────
@@ -2723,20 +2725,28 @@ function imprimirQR() {
   if (!img) return;
 
   const w = window.open('', '_blank');
-  w.document.write('<!DOCTYPE html><html><head>' +
-    '<title>QR Code — ' + maqNome + '</title>' +
-    '<style>body{font-family:Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#fff;}' +
-    'img{width:200px;height:200px;}h2{color:#0076BE;margin:16px 0 4px;font-size:18px;}' +
-    'p{color:#888;font-size:12px;margin:0;}.box{border:2px solid #e0eaf0;border-radius:16px;padding:28px 32px;text-align:center;}' +
-    '</style></head><body>' +
-    '<div class="box"><img src="' + img.src + '" alt="QR Code"><h2>' + maqNome + '</h2>' +
-    '<p>Escaneie para registrar uma demanda</p></div>' +
-    '<script>window.onload=function(){window.print();}<\/script>' +
-    '</body></html>');
+  w.document.write(
+    '<!DOCTYPE html><html><head>' +
+    '<title>QR Code - ' + maqNome + '</title>' +
+    '\u003cstyle\u003e' +
+    'body{font-family:Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#fff;}' +
+    'img{width:200px;height:200px;}' +
+    'h2{color:#0076BE;margin:16px 0 4px;font-size:18px;}' +
+    'p{color:#888;font-size:12px;margin:0;}' +
+    '.box{border:2px solid #e0eaf0;border-radius:16px;padding:28px 32px;text-align:center;}' +
+    '<\/style><\/head><body>' +
+    '<div class="box">' +
+    '<img src="' + img.src + '" alt="QR Code">' +
+    '<h2>' + maqNome + '</h2>' +
+    '<p>Escaneie para registrar uma demanda</p>' +
+    '</div>' +
+    '\u003cscript\u003ewindow.onload=function(){window.print();}<\/script>' +
+    '</body></html>'
+  );
   w.document.close();
 }
 
-// Verifica se abriu via QR Code (URL com ?maq=...)
+
 function checkQRParam() {
   const params = new URLSearchParams(window.location.search);
   const maqKey = params.get('maq');
@@ -2757,6 +2767,57 @@ function aplicarQRSeExistir() {
     window._qrMaqKey  = null;
     window._qrMaqNome = null;
   }, 500);
+}
+
+
+// ── NOTIFICAÇÃO ADMIN ──────────────────────────────────────
+function abrirModalNotifAdmin() {
+  document.getElementById('notif-msg').value = '';
+  document.getElementById('notif-titulo').value = '📣 Fiobras Manutenção';
+  document.getElementById('modal-notif-admin').classList.add('open');
+  setTimeout(() => document.getElementById('notif-msg').focus(), 100);
+}
+
+function enviarNotifAdmin() {
+  const dest   = document.getElementById('notif-dest').value;
+  const titulo = document.getElementById('notif-titulo').value.trim() || '📣 Fiobras Manutenção';
+  const msg    = document.getElementById('notif-msg').value.trim();
+  if (!msg) { alert('Escreva uma mensagem.'); return; }
+
+  // Salva no Firebase — todos os devices monitoram e exibem
+  window._fbPushFCMPending({
+    titulo,
+    corpo:   msg,
+    ts:      Date.now(),
+    dest,               // 'todos' ou nome específico
+    resp:    '',
+    de:      state.user,
+    tipo:    'manual',
+  });
+
+  fecharModal('modal-notif-admin');
+
+  // Exibe também in-app para o próprio admin
+  exibirInAppNotif(titulo, msg, state.user);
+}
+
+let inAppTimer = null;
+function exibirInAppNotif(titulo, msg, de) {
+  const el = document.getElementById('inapp-notif');
+  document.getElementById('inapp-titulo').textContent = titulo;
+  document.getElementById('inapp-msg').textContent    = msg;
+  document.getElementById('inapp-de').textContent     = de ? 'De: ' + de : '';
+  el.style.display = 'block';
+  el.style.animation = 'slideDown 0.3s ease';
+  if (inAppTimer) clearTimeout(inAppTimer);
+  inAppTimer = setTimeout(fecharInAppNotif, 6000);
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+}
+
+function fecharInAppNotif() {
+  const el = document.getElementById('inapp-notif');
+  el.style.animation = 'slideUp 0.3s ease';
+  setTimeout(() => { el.style.display = 'none'; }, 280);
 }
 
 // ── MODAL UTIL ────────────────────────────────────────
@@ -2788,6 +2849,7 @@ Object.assign(window, {
   renderCalendario, initNotificacoes, mostrarNotif,
   renderMaquinas, abrirModalMaquina, salvarMaquina, deletarMaquina, updateBanner,
   abrirQR, imprimirQR,
+  abrirModalNotifAdmin, enviarNotifAdmin, fecharInAppNotif,
   populatePvMaquinaSelect, onPvMaquinaChange, onPvTarefaChange,
   abrirModalMover, confirmarMove, cancelarMove, setKFilterSel,
 });
@@ -2850,61 +2912,53 @@ const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
 const manifestURL = URL.createObjectURL(blob);
 document.getElementById('pwa-manifest').setAttribute('href', manifestURL);
 
-// ── SERVICE WORKER ─────────────────────────────────────────
+
+// ── SERVICE WORKER (cache + PWA) ─────────────────────────
 if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE = 'fiobras-manut-v1';
-    const ASSETS = [
-      'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap'
-    ];
-    self.addEventListener('install', e => {
-      e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>{})));
-      self.skipWaiting();
-    });
-    self.addEventListener('activate', e => {
-      e.waitUntil(caches.keys().then(keys =>
-        Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-      ));
-      self.clients.claim();
-    });
-    self.addEventListener('fetch', e => {
-      if (e.request.method !== 'GET') return;
-      e.respondWith(
-        fetch(e.request).catch(() => caches.match(e.request))
-      );
-    });
-  `;
+  const swCode = [
+    "const CACHE = 'fiobras-v2.0';",
+    "self.addEventListener('install', () => self.skipWaiting());",
+    "self.addEventListener('activate', () => self.clients.claim());",
+    "self.addEventListener('fetch', e => { if (e.request.method !== 'GET') return; e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });"
+  ].join('\n');
   const swBlob = new Blob([swCode], { type: 'application/javascript' });
-  const swURL  = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swURL, { scope: './' })
-    .then(() => console.log('SW registrado'))
-    .catch(e => console.warn('SW falhou:', e));
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob), { scope: './' })
+    .then(reg => { window._swRegistration = reg; })
+    .catch(e  => console.warn('SW:', e));
 }
 
-// ── BANNER DE INSTALAÇÃO ───────────────────────────────────
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Mostra botão de instalar no header após login
-  const btn = document.getElementById('btn-instalar');
-  if (btn) btn.style.display = 'flex';
-});
-window.addEventListener('appinstalled', () => {
-  const btn = document.getElementById('btn-instalar');
-  if (btn) btn.style.display = 'none';
-  deferredPrompt = null;
-});
-window._instalarApp = async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  if (outcome === 'accepted') {
-    document.getElementById('btn-instalar').style.display = 'none';
-  }
-};
-</script>
+async function initFCMToken() {
+  if (!state.user) return;
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
 
+  try {
+    // Registrar SW do Firebase Messaging via CDN (HTTPS apenas)
+    const swResp = await fetch('https://fiobras-fcm.williamscchulz.workers.dev/', { method: 'GET' });
+    console.log('FCM Worker ping:', swResp.ok);
+  } catch(e) {
+    console.warn('FCM Worker:', e.message);
+  }
+
+  // Salvar token via Firebase — usa push token do browser
+  try {
+    const { getMessaging, getToken } = await import(
+      'https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js'
+    );
+    // Precisamos de um SW registrado com scope correto para FCM no HTTPS
+    // O token é salvo no Firebase e o Worker o usa para enviar push
+    const VAPID = 'BEG44TK4LwIReQajBvPnR0eFid3DKVNScpxzqNu3J6CJYBuPOjq80EG6AOmRVaeS4A-8ZtGzYVFo8Aza_GMEQoI';
+    const messaging = getMessaging();
+    const token = await getToken(messaging, { vapidKey: VAPID });
+    if (token && window._fbSaveToken) {
+      window._fbSaveToken(state.user, token);
+      window._fcmToken = token;
+      console.log('FCM token salvo para', state.user);
+    }
+  } catch(e) {
+    console.warn('FCM token:', e.message);
+  }
+}
+</script>
 </body>
 </html>
