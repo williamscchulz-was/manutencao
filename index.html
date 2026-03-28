@@ -1,10 +1,45 @@
+<!--
+================================================================================
+FIOBRAS MANUTENÇÃO — CHANGELOG
+================================================================================
+v2.5.1  27/03/2026  Login com cards clicáveis por usuário
+v2.5    27/03/2026  Notificações perdidas ao abrir app + badge urgentes no nav
+v2.4    27/03/2026  Login estilo cards (CRM), banner notif auto-hide
+v2.3    27/03/2026  Zero emojis, ícone industrial SVG
+v2.2.2  27/03/2026  Menu suspenso oculto no login (classe logged-in)
+v2.2.1  27/03/2026  Login centralizado, menu suspenso só pós-login
+v2.2    27/03/2026  Firebase Messaging SW externo (firebase-messaging-sw.js)
+v2.1    27/03/2026  FCM token + Cloudflare Worker integrado
+v2.0    27/03/2026  Botão notificação admin, popup in-app, broadcast
+v1.9    27/03/2026  Cloudflare Worker FCM + cron trigger
+v1.8    27/03/2026  Bottom nav oculto no login, ícone fábrica industrial
+v1.7    27/03/2026  Viewport fix, zoom travado no mobile
+v1.6    27/03/2026  QR Code sem CDN externo (Google Charts API)
+v1.5    27/03/2026  QR Code por máquina com impressão
+v1.4    27/03/2026  Bottom nav flutuante estilo Nubank, ícones SVG
+v1.3    27/03/2026  Splash screen + bottom navigation mobile
+v1.2    27/03/2026  Fix login: Joacir ausente, admin tabs, variável userNome
+v1.1    27/03/2026  Foto na demanda, comentários, tempo parado, exportar histórico
+v1.0    27/03/2026  Sistema de usuários (7 perfis), notificações filtradas por resp.
+v0.9    27/03/2026  Notificações FCM + Cloudflare Worker (primeira versão)
+v0.8    27/03/2026  Ordenação Kanban, banner alertas vencidas, vibração
+v0.7    27/03/2026  Viewport mobile fix
+v0.6    27/03/2026  Header reestruturado, ícone fábrica bottom nav
+v0.5    27/03/2026  Mobile CSS completo (mobile-first)
+v0.4    27/03/2026  Joacir admin, fix isAdmin
+v0.3    27/03/2026  Usuário Joacir criado
+v0.2    27/03/2026  Fix modal preventiva, botão editar
+v0.1    27/03/2026  Versão inicial — Kanban, Preventiva, Máquinas, Histórico, PWA
+================================================================================
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Fiobras · Manutenção</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="app-changelog" content="v2.6:fix-notif-sw+changelog|v2.5.1:login-cards|v2.5:missed-notif+badge|v2.4:login-UI+banner|v2.3:no-emoji+icon|v2.2:FCM-SW|v2.1:FCM-token|v2.0:admin-notif|v1.9:cloudflare-worker|v1.8:bottom-nav|v1.7:viewport|v1.6:qr-no-cdn|v1.5:qr-code|v1.4:floating-nav|v1.3:splash|v1.2:login-fix|v1.1:foto+comments|v1.0:users|v0.9:fcm|v0.8:ordering|v0.1:initial">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --green:      #008835;
@@ -968,13 +1003,14 @@ body.is-admin .tab-btn.admin-only { display: block; }
   transition:opacity 0.6s ease;
 ">
   <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
-    <div style="
-      width:80px;height:80px;
-      background:rgba(255,255,255,0.15);
-      border-radius:22px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:2.4rem;
-    "></div>
+    <div style="width:88px;height:88px;background:rgba(255,255,255,0.15);border-radius:24px;display:flex;align-items:center;justify-content:center;padding:18px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="52" height="52">
+        <path d="M2 20V9l6-4v4l6-4v4l6-4v15H2z"/>
+        <rect x="9" y="14" width="2" height="6"/>
+        <rect x="13" y="14" width="2" height="6"/>
+        <path d="M5 20v-4h3v4"/>
+      </svg>
+    </div>
     <div style="text-align:center">
       <div style="font-family:'Poppins',sans-serif;font-size:2rem;font-weight:700;color:#fff;letter-spacing:-0.5px;line-height:1">
         Fio<span style="color:rgba(255,255,255,0.7)">bras</span>
@@ -994,38 +1030,44 @@ body.is-admin .tab-btn.admin-only { display: block; }
 
 <div class="login-screen" id="login-screen">
   <div class="login-box">
-    <div class="login-logo">Fio<em>bras</em></div>
-    <div class="login-sub">Sistema de Manutenção</div>
-
-    <!-- Seletor de usuário padrão -->
-    <div id="login-section-user">
-      <div class="login-field">
-        <label>Quem é você?</label>
-        <select id="login-user-sel" onchange="onLoginUserChange()" style="background:var(--bg);border:1.5px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.9rem;padding:11px 14px;outline:none;width:100%;transition:border-color 0.2s">
-          <option value="">Selecionar...</option>
-          <option value="hernandes">Hernandes</option>
-          <option value="vorlei">Vorlei</option>
-          <option value="pedro">Pedro</option>
-          <option value="ivonei">Ivonei</option>
-          <option value="roland">Roland</option>
-          <option value="joacir"> Joacir</option>
-          <option value="__admin__"> Administrador</option>
-        </select>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0076BE" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
+      </svg>
+      <div>
+        <div class="login-logo">Fio<em>bras</em></div>
+        <div class="login-sub" style="margin-bottom:0">Sistema de Manutenção</div>
       </div>
-      <div id="login-senha-wrap" style="display:none">
-        <div class="login-field">
-          <label>Senha</label>
-          <input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <input type="checkbox" id="lembrar-check" style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer">
-        <label for="lembrar-check" style="font-size:0.7rem;color:var(--muted);cursor:pointer;user-select:none">Lembrar neste dispositivo</label>
-      </div>
-      <button class="login-btn" onclick="doLogin()">Entrar</button>
-      <div class="login-err" id="login-err"></div>
     </div>
+    <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px">Bem-vindo</div>
+    <div style="font-size:0.72rem;color:var(--muted);margin-bottom:18px">Selecione seu perfil</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+      <div class="login-user-card" onclick="selecionarUsuario('hernandes')"><div class="luc-avatar">H</div><div class="luc-info"><div class="luc-nome">Hernandes</div><div class="luc-role">Técnico</div></div><div class="luc-radio" id="radio-hernandes"></div></div>
+      <div class="login-user-card" onclick="selecionarUsuario('vorlei')"><div class="luc-avatar">V</div><div class="luc-info"><div class="luc-nome">Vorlei</div><div class="luc-role">Técnico</div></div><div class="luc-radio" id="radio-vorlei"></div></div>
+      <div class="login-user-card" onclick="selecionarUsuario('pedro')"><div class="luc-avatar">P</div><div class="luc-info"><div class="luc-nome">Pedro</div><div class="luc-role">Técnico</div></div><div class="luc-radio" id="radio-pedro"></div></div>
+      <div class="login-user-card" onclick="selecionarUsuario('ivonei')"><div class="luc-avatar">I</div><div class="luc-info"><div class="luc-nome">Ivonei</div><div class="luc-role">Técnico</div></div><div class="luc-radio" id="radio-ivonei"></div></div>
+      <div class="login-user-card" onclick="selecionarUsuario('roland')"><div class="luc-avatar">R</div><div class="luc-info"><div class="luc-nome">Roland</div><div class="luc-role">Técnico</div></div><div class="luc-radio" id="radio-roland"></div></div>
+      <div class="login-user-card" onclick="selecionarUsuario('joacir')"><div class="luc-avatar" style="background:#1a2e20">J</div><div class="luc-info"><div class="luc-nome">Joacir</div><div class="luc-role">Administrador</div></div><div class="luc-radio" id="radio-joacir"></div></div>
+      <div class="login-user-card" onclick="selecionarUsuario('__admin__')"><div class="luc-avatar" style="background:#1a2e20">A</div><div class="luc-info"><div class="luc-nome">Administrador</div><div class="luc-role">Acesso total</div></div><div class="luc-radio" id="radio-__admin__"></div></div>
     </div>
+    <div id="login-senha-wrap" style="display:none;margin-bottom:12px">
+      <div class="login-field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    </div>
+    <select id="login-user-sel" style="display:none" onchange="onLoginUserChange()">
+      <option value="">Selecionar...</option>
+      <option value="hernandes">Hernandes</option><option value="vorlei">Vorlei</option>
+      <option value="pedro">Pedro</option><option value="ivonei">Ivonei</option>
+      <option value="roland">Roland</option><option value="joacir">Joacir</option>
+      <option value="__admin__">Administrador</option>
+    </select>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <input type="checkbox" id="lembrar-check" style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer">
+      <label for="lembrar-check" style="font-size:0.7rem;color:var(--muted);cursor:pointer;user-select:none">Lembrar neste dispositivo</label>
+    </div>
+    <div class="login-err" id="login-err"></div>
+    <div style="text-align:center;font-size:0.56rem;color:var(--muted2);margin-top:12px">Fiobras · Manutenção Industrial · Acesso restrito</div>
+</div>
 </div>
 
 <!-- ── APP ── -->
@@ -1044,7 +1086,11 @@ body.is-admin .tab-btn.admin-only { display: block; }
           <div class="role" id="h-role"></div>
         </div>
         <button id="btn-instalar" onclick="window._instalarApp()" class="btn-instalar" style="display:none">Instalar</button>
-        <button id="btn-notif-test" onclick="abrirModalNotifAdmin()" style="display:none;align-items:center;gap:5px;padding:7px 12px;background:rgba(255,203,0,0.15);border:1.5px solid rgba(255,203,0,0.4);border-radius:7px;color:#FFCB00;font-family:'Poppins',sans-serif;font-size:0.62rem;font-weight:600;cursor:pointer;white-space:nowrap" title="Enviar notificação">
+        <button id="btn-ver-notifs" onclick="abrirModalNotifHistorico()" style="display:none;align-items:center;gap:5px;padding:7px 10px;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.25);border-radius:7px;color:rgba(255,255,255,0.8);font-family:'Poppins',sans-serif;font-size:0.62rem;cursor:pointer;position:relative" title="Notificações">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span id="btn-notif-count" style="background:#d94040;color:#fff;font-size:0.5rem;font-weight:700;min-width:14px;height:14px;border-radius:7px;display:none;align-items:center;justify-content:center;padding:0 3px">0</span>
+    </button>
+    <button id="btn-notif-test" onclick="abrirModalNotifAdmin()" style="display:none;align-items:center;gap:5px;padding:7px 12px;background:rgba(255,203,0,0.15);border:1.5px solid rgba(255,203,0,0.4);border-radius:7px;color:#FFCB00;font-family:'Poppins',sans-serif;font-size:0.62rem;font-weight:600;cursor:pointer;white-space:nowrap" title="Enviar notificação">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       <span class="btn-notif-label">Notificar</span>
     </button>
@@ -1368,6 +1414,19 @@ body.is-admin .tab-btn.admin-only { display: block; }
   </div>
 </div>
 
+
+<!-- MODAL HISTÓRICO NOTIFICAÇÕES -->
+<div class="modal-bg" id="modal-notif-historico">
+  <div class="modal" style="width:480px;max-height:80vh">
+    <div class="modal-title">Notificações</div>
+    <div id="notif-hist-list" style="display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow-y:auto;padding-right:4px"></div>
+    <div class="modal-actions" style="margin-top:14px">
+      <button class="modal-btn cancel" onclick="fecharModal('modal-notif-historico')">Fechar</button>
+      <button class="modal-btn confirm" onclick="marcarTodasLidas()" style="background:var(--muted);max-width:160px">Marcar como lidas</button>
+    </div>
+  </div>
+</div>
+
 </div><!-- /app -->
 
 <!-- ── MODAIS ── -->
@@ -1654,7 +1713,7 @@ window._resetHistorico = () => {
 </script>
 
 <script>
-const VERSION    = 'v2.5';
+const VERSION    = 'v2.6.1';
 // Usuários do sistema
 const USERS = {
   'admin':     { senha: 'admin',  isAdmin: true,  nome: 'Admin'     },
@@ -1772,6 +1831,8 @@ function doLogin() {
   // Mostrar botão de notificação só para admin
   const btnNotif = document.getElementById('btn-notif-test');
   if (btnNotif) btnNotif.style.display = isAdmin ? 'flex' : 'none';
+  const btnVerNotifs = document.getElementById('btn-ver-notifs');
+  if (btnVerNotifs) btnVerNotifs.style.display = 'flex';
   const bnav = document.getElementById('bottom-nav');
   if (bnav) {
     bnav.style.removeProperty('display');
@@ -1793,6 +1854,8 @@ function doLogout() {
   document.body.classList.remove('logged-in');
   try { localStorage.removeItem('fio_sel'); localStorage.removeItem('fio_senha'); localStorage.removeItem('fio_lembrar'); } catch(e) {}
   try { const cb = document.getElementById('lembrar-check'); if(cb) cb.checked = false; } catch(e) {}
+  const btnVN = document.getElementById('btn-ver-notifs');
+  if (btnVN) btnVN.style.display = 'none';
   const bnavOut = document.getElementById('bottom-nav');
   if (bnavOut) bnavOut.style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
@@ -1995,31 +2058,7 @@ function buildCard(c) {
   // Admin: vê  e  em qualquer card
   // Usuário: vê  apenas nas próprias demandas
     const podeExcluir = state.isAdmin || (c.tipo === 'demanda' && c.autor === state.user);
-  const btnConcluir = `<button class="card-menu-btn" onclick="moverCard('CKEY','done')" title="Concluir"></button>`.replace('CKEY', c._key);
-  const btnExcluir  = `<button class="card-menu-btn" onclick="deletarCard('CKEY')" title="Excluir" style="color:var(--red);opacity:.7"></button>`.replace('CKEY', c._key);
-  const adminActions = state.isAdmin ? (btnConcluir + btnExcluir) : podeExcluir ? btnExcluir : '';
-
-  return `
-    <div class="kanban-card ${doneClass}" draggable="${state.isAdmin}" data-id="${c._key}" data-urg="${c.urg}">
-      <div class="card-top">
-        <div class="card-title">${c.titulo}</div>
-        <div style="display:flex;gap:2px">${adminActions}</div>
-      </div>
-      ${c.desc ? `<div class="card-desc">${c.desc}</div>` : ''}
-      ${fotoHtml}
-      <div class="card-tags">
-        ${urgBadge(c.urg)}
-        ${setorBadge(c.setor)}
-        <span class="badge ${c.tipo==='preventiva'?'badge-blue':'badge-gray'}">${c.tipo==='preventiva'?'Preventiva':'Demanda'}</span>
-        ${tempoBadge(c)}
-      </div>
-      <div id="mv-log-${c._key}" style="margin-bottom:6px">
-        ${(c.movLog && c.movLog.length) ? (() => {
-          const last = c.movLog[c.movLog.length-1];
-          const colLabel = {todo:'A Fazer',doing:'Em Andamento',done:'Concluído'};
-          return `<div style="font-size:0.58rem;color:var(--muted);background:var(--bg);border-radius:5px;padding:3px 7px">
-            ${last.resp} → ${colLabel[last.para]||last.para} · ${last.hora}
-          </div>`;
+  const btnConcluir = '<button class="card-menu-btn" onclick="moverCard(\'' + c._key + '\',\'done\')">' + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' + '</button>';
         })() : ''}
       </div>
       <div class="card-footer">
@@ -2232,7 +2271,7 @@ function renderPreventiva() {
       <td>${proxima.toLocaleDateString('pt-BR')}</td>
       <td><span class="badge ${bCls}">${bTxt}</span></td>
       <td style="display:flex;gap:5px;align-items:center">
-        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="executarPreventiva('${p._key||p.id}')"></button>
+        <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="executarPreventiva('${p._key||p.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></button>
         <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem" onclick="abrirModalPreventiva('${p._key||p.id}')">️</button>
         <button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarPreventiva('${p._key||p.id}')"></button>
       </td>
@@ -2471,22 +2510,29 @@ function pedirPermissaoNotif() {
 }
 
 function mostrarNotif(titulo, corpo, tag) {
-  if (notifPermission !== 'granted') return;
   if (!('Notification' in window)) return;
-  try {
-    // Vibração no celular (padrão: 3 pulsos)
-    if (navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300]);
+  notifPermission = Notification.permission;
+  if (notifPermission !== 'granted') return;
+  if (navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300]);
 
-    const n = new Notification(titulo, {
-      body: corpo,
-      icon: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='110' font-family='sans-serif'></text></svg>`),
-      badge: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' rx='16' fill='%230076BE'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='60' font-family='sans-serif'></text></svg>`),
-      tag: tag || 'fiobras-manut',
-      renotify: true,
-      requireInteraction: true,
-    });
-    n.onclick = () => { window.focus(); n.close(); };
-  } catch(e) { console.warn('Notif error:', e); }
+  const opts = {
+    body:    corpo || '',
+    tag:     tag || 'fiobras-manut',
+    renotify: true,
+    requireInteraction: false,
+    silent:  false,
+  };
+
+  // Usa SW para notificação nativa no celular (funciona em background)
+  if (window._swRegistration && window._swRegistration.active) {
+    window._swRegistration.showNotification(titulo, opts)
+      .catch(() => { try { new Notification(titulo, opts); } catch(e) {} });
+  } else {
+    try {
+      const n = new Notification(titulo, opts);
+      n.onclick = () => { window.focus(); n.close(); };
+    } catch(e) { console.warn('Notif:', e.message); }
+  }
 }
 
 // Detecta cards preventivos de urgência alta — notifica repetidamente enquanto pendente
@@ -2526,6 +2572,7 @@ function checkNotifNovosCards(cards) {
   });
 
   prevCardIds = currentAllIds;
+  atualizarBadgeNotif();
 }
 
 function dispararNotif(card) {
@@ -2575,11 +2622,11 @@ function renderMaquinas() {
           <div class="maquina-tag">${m.tag || ''} · ${m.setor === 'eletrica' ? 'Elétrica' : 'Mecânica'}</div>
         </div>
         <div style="display:flex;gap:4px">
-          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" title="QR Code" onclick="abrirQR('${m._key}','${m.tag || m.nome}')">
+          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" title="QR Code" onclick="abrirQR('${m._key}','${m.tag || m.nome}')" title="QR Code">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="6" y="6" width="1" height="1" fill="currentColor"/><rect x="17" y="6" width="1" height="1" fill="currentColor"/><rect x="6" y="17" width="1" height="1" fill="currentColor"/><line x1="14" y1="14" x2="14" y2="14"/><line x1="17" y1="14" x2="21" y2="14"/><line x1="14" y1="17" x2="14" y2="21"/><line x1="17" y1="17" x2="17" y2="17"/><line x1="21" y1="17" x2="21" y2="17"/><line x1="21" y1="21" x2="21" y2="21"/></svg>
           </button>
-          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" onclick="abrirModalMaquina('${m._key}')">️</button>
-          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarMaquina('${m._key}')"></button>
+          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" onclick="abrirModalMaquina('${m._key}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>️</button>
+          <button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarMaquina('${m._key}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
         </div>
       </div>
       <div class="maquina-body">
@@ -2779,7 +2826,41 @@ function exportarHistorico() {
   ].join('');
 
   const pageHtml =
-    '<!DOCTYPE html><html lang="pt-BR"><head>' +
+    '<!--
+================================================================================
+FIOBRAS MANUTENÇÃO — CHANGELOG
+================================================================================
+v2.5.1  27/03/2026  Login com cards clicáveis por usuário
+v2.5    27/03/2026  Notificações perdidas ao abrir app + badge urgentes no nav
+v2.4    27/03/2026  Login estilo cards (CRM), banner notif auto-hide
+v2.3    27/03/2026  Zero emojis, ícone industrial SVG
+v2.2.2  27/03/2026  Menu suspenso oculto no login (classe logged-in)
+v2.2.1  27/03/2026  Login centralizado, menu suspenso só pós-login
+v2.2    27/03/2026  Firebase Messaging SW externo (firebase-messaging-sw.js)
+v2.1    27/03/2026  FCM token + Cloudflare Worker integrado
+v2.0    27/03/2026  Botão notificação admin, popup in-app, broadcast
+v1.9    27/03/2026  Cloudflare Worker FCM + cron trigger
+v1.8    27/03/2026  Bottom nav oculto no login, ícone fábrica industrial
+v1.7    27/03/2026  Viewport fix, zoom travado no mobile
+v1.6    27/03/2026  QR Code sem CDN externo (Google Charts API)
+v1.5    27/03/2026  QR Code por máquina com impressão
+v1.4    27/03/2026  Bottom nav flutuante estilo Nubank, ícones SVG
+v1.3    27/03/2026  Splash screen + bottom navigation mobile
+v1.2    27/03/2026  Fix login: Joacir ausente, admin tabs, variável userNome
+v1.1    27/03/2026  Foto na demanda, comentários, tempo parado, exportar histórico
+v1.0    27/03/2026  Sistema de usuários (7 perfis), notificações filtradas por resp.
+v0.9    27/03/2026  Notificações FCM + Cloudflare Worker (primeira versão)
+v0.8    27/03/2026  Ordenação Kanban, banner alertas vencidas, vibração
+v0.7    27/03/2026  Viewport mobile fix
+v0.6    27/03/2026  Header reestruturado, ícone fábrica bottom nav
+v0.5    27/03/2026  Mobile CSS completo (mobile-first)
+v0.4    27/03/2026  Joacir admin, fix isAdmin
+v0.3    27/03/2026  Usuário Joacir criado
+v0.2    27/03/2026  Fix modal preventiva, botão editar
+v0.1    27/03/2026  Versão inicial — Kanban, Preventiva, Máquinas, Histórico, PWA
+================================================================================
+-->
+<!DOCTYPE html><html lang="pt-BR"><head>' +
     '<meta charset="UTF-8">' +
     '<title>Historico Fiobras<\/title>' +
     '\u003cstyle\u003e' + css + '<\/style>' +
@@ -2878,7 +2959,41 @@ function imprimirQR() {
 
   const w = window.open('', '_blank');
   w.document.write(
-    '<!DOCTYPE html><html><head>' +
+    '<!--
+================================================================================
+FIOBRAS MANUTENÇÃO — CHANGELOG
+================================================================================
+v2.5.1  27/03/2026  Login com cards clicáveis por usuário
+v2.5    27/03/2026  Notificações perdidas ao abrir app + badge urgentes no nav
+v2.4    27/03/2026  Login estilo cards (CRM), banner notif auto-hide
+v2.3    27/03/2026  Zero emojis, ícone industrial SVG
+v2.2.2  27/03/2026  Menu suspenso oculto no login (classe logged-in)
+v2.2.1  27/03/2026  Login centralizado, menu suspenso só pós-login
+v2.2    27/03/2026  Firebase Messaging SW externo (firebase-messaging-sw.js)
+v2.1    27/03/2026  FCM token + Cloudflare Worker integrado
+v2.0    27/03/2026  Botão notificação admin, popup in-app, broadcast
+v1.9    27/03/2026  Cloudflare Worker FCM + cron trigger
+v1.8    27/03/2026  Bottom nav oculto no login, ícone fábrica industrial
+v1.7    27/03/2026  Viewport fix, zoom travado no mobile
+v1.6    27/03/2026  QR Code sem CDN externo (Google Charts API)
+v1.5    27/03/2026  QR Code por máquina com impressão
+v1.4    27/03/2026  Bottom nav flutuante estilo Nubank, ícones SVG
+v1.3    27/03/2026  Splash screen + bottom navigation mobile
+v1.2    27/03/2026  Fix login: Joacir ausente, admin tabs, variável userNome
+v1.1    27/03/2026  Foto na demanda, comentários, tempo parado, exportar histórico
+v1.0    27/03/2026  Sistema de usuários (7 perfis), notificações filtradas por resp.
+v0.9    27/03/2026  Notificações FCM + Cloudflare Worker (primeira versão)
+v0.8    27/03/2026  Ordenação Kanban, banner alertas vencidas, vibração
+v0.7    27/03/2026  Viewport mobile fix
+v0.6    27/03/2026  Header reestruturado, ícone fábrica bottom nav
+v0.5    27/03/2026  Mobile CSS completo (mobile-first)
+v0.4    27/03/2026  Joacir admin, fix isAdmin
+v0.3    27/03/2026  Usuário Joacir criado
+v0.2    27/03/2026  Fix modal preventiva, botão editar
+v0.1    27/03/2026  Versão inicial — Kanban, Preventiva, Máquinas, Histórico, PWA
+================================================================================
+-->
+<!DOCTYPE html><html><head>' +
     '<title>QR Code - ' + maqNome + '</title>' +
     '\u003cstyle\u003e' +
     'body{font-family:Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#fff;}' +
@@ -3012,6 +3127,77 @@ async function verificarNotificacoesPerdidas() {
   }
 }
 
+
+// ── HISTÓRICO DE NOTIFICAÇÕES ──────────────────────────────
+function abrirModalNotifHistorico() {
+  const pending = state._lastFcmPending || {};
+  const agora = Date.now();
+  const lista = document.getElementById('notif-hist-list');
+
+  const itens = Object.entries(pending)
+    .filter(([,p]) => {
+      if (!p.ts || (agora - p.ts) > 7 * 24 * 3600 * 1000) return false;
+      const dest = p.dest || 'todos';
+      if (dest !== 'todos') {
+        const destNome = USERS[dest] ? USERS[dest].nome : dest;
+        if (destNome !== state.user) return false;
+      }
+      return true;
+    })
+    .sort((a,b) => (b[1].ts||0) - (a[1].ts||0));
+
+  if (!itens.length) {
+    lista.innerHTML = '<div class="empty-state">Nenhuma notificação recente.</div>';
+  } else {
+    lista.innerHTML = itens.map(([key, p]) => {
+      const lida = sessionStorage.getItem('fcm_' + key);
+      const dt = p.ts ? new Date(p.ts).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+      const bg  = lida ? 'var(--bg)' : 'var(--blue-lt)';
+      const brd = lida ? 'var(--border)' : 'var(--blue-md)';
+      return '<div style="background:' + bg + ';border:1.5px solid ' + brd + ';border-radius:10px;padding:12px 14px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px">' +
+        '<div style="font-size:0.78rem;font-weight:600;color:var(--text)">' + (p.titulo || 'Notificação') + '</div>' +
+        '<div style="font-size:0.58rem;color:var(--muted);white-space:nowrap">' + dt + '</div>' +
+        '</div>' +
+        '<div style="font-size:0.7rem;color:var(--text2)">' + (p.corpo || '') + '</div>' +
+        (p.de ? '<div style="font-size:0.6rem;color:var(--muted);margin-top:4px">De: ' + p.de + '</div>' : '') +
+        '</div>';
+    }).join('');
+  }
+
+  document.getElementById('modal-notif-historico').classList.add('open');
+}
+
+function marcarTodasLidas() {
+  const pending = state._lastFcmPending || {};
+  Object.keys(pending).forEach(key => sessionStorage.setItem('fcm_' + key, '1'));
+  atualizarBadgeNotif();
+  fecharModal('modal-notif-historico');
+}
+
+function atualizarBadgeNotif() {
+  const pending = state._lastFcmPending || {};
+  const agora = Date.now();
+  let naoLidas = 0;
+  Object.entries(pending).forEach(([key, p]) => {
+    if (!p.ts || (agora - p.ts) > 7 * 24 * 3600 * 1000) return;
+    const dest = p.dest || 'todos';
+    if (dest !== 'todos') {
+      const destNome = USERS[dest] ? USERS[dest].nome : dest;
+      if (destNome !== state.user) return;
+    }
+    if (!sessionStorage.getItem('fcm_' + key)) naoLidas++;
+  });
+
+  const btn = document.getElementById('btn-ver-notifs');
+  const cnt = document.getElementById('btn-notif-count');
+  if (btn) btn.style.display = 'flex';
+  if (cnt) {
+    cnt.style.display = naoLidas > 0 ? 'flex' : 'none';
+    cnt.textContent = naoLidas > 9 ? '9+' : naoLidas;
+  }
+}
+
 // ── MODAL UTIL ────────────────────────────────────────
 function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
 
@@ -3029,6 +3215,32 @@ function switchTab(tab, btn) {
   document.getElementById('panel-' + tab).classList.add('active');
 }
 
+
+// ── AUTO-LOGIN ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    const savedSel   = localStorage.getItem('fio_sel');
+    const savedSenha = localStorage.getItem('fio_senha');
+    const savedLembrar = localStorage.getItem('fio_lembrar');
+    if (savedLembrar === '1' && savedSel) {
+      const selEl = document.getElementById('login-user-sel');
+      if (selEl) selEl.value = savedSel;
+      const senhaEl = document.getElementById('login-senha');
+      if (senhaEl && savedSenha) senhaEl.value = savedSenha;
+      const cb = document.getElementById('lembrar-check');
+      if (cb) cb.checked = true;
+      // Se for usuário sem senha, usa selecionarUsuario (entra direto)
+      // Se for admin/joacir, chama doLogin com senha
+      const precisaSenha = savedSel === '__admin__' || savedSel === 'joacir';
+      if (precisaSenha && savedSenha) {
+        doLogin();
+      } else if (!precisaSenha) {
+        selecionarUsuario(savedSel);
+      }
+    }
+  } catch(e) { console.warn('auto-login:', e); }
+});
+
 // Expose to HTML
 Object.assign(window, {
   doLogin, doLogout, switchTab, switchTabMobile, onLoginUserChange,
@@ -3040,6 +3252,7 @@ Object.assign(window, {
   fecharModal,
   renderCalendario, initNotificacoes, mostrarNotif,
   pedirPermissaoNotif, esconderBannerNotif, verificarNotificacoesPerdidas,
+  abrirModalNotifHistorico, marcarTodasLidas, atualizarBadgeNotif,
   renderMaquinas, abrirModalMaquina, salvarMaquina, deletarMaquina, updateBanner,
   abrirQR, imprimirQR,
   abrirModalNotifAdmin, enviarNotifAdmin, fecharInAppNotif,
@@ -3052,24 +3265,7 @@ Object.assign(window, {
 
 checkQRParam();
 // ── PREENCHER LOGIN SALVO ──────────────────────────────────
-(function() {
-  try {
-    const savedSel   = localStorage.getItem('fio_sel');
-    const savedSenha = localStorage.getItem('fio_senha');
-    const savedLembrar = localStorage.getItem('fio_lembrar');
-    if (savedLembrar === '1' && savedSel) {
-      document.addEventListener('DOMContentLoaded', () => {
-        const sel = document.getElementById('login-user-sel');
-        if (sel) sel.value = savedSel;
-        const senhaEl = document.getElementById('login-senha');
-        if (senhaEl && savedSenha) senhaEl.value = savedSenha;
-        const cb = document.getElementById('lembrar-check');
-        if (cb) cb.checked = true;
-        doLogin();
-      });
-    }
-  } catch(e) {}
-})();
+// auto-login moved to DOMContentLoaded
 
 </script>
 
