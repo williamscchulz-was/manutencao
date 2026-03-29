@@ -114,7 +114,7 @@ body{background:#EDF2EE !important;color:#1A2E1E;font-family:'Poppins',sans-seri
 @media(max-width:700px){html{zoom:0.85;}}
 
 /* ── HEADER ── */
-.header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,#008835 0%,#007030 100%);padding:0 28px 0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.2);overflow:hidden;}
+.header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,#008835 0%,#007030 100%);padding:0 28px 0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.2);}
 .header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#006020,#FFCB00,#0076BE);opacity:.5;}
 .header-left{display:flex;align-items:baseline;gap:10px;min-width:0;flex-shrink:1;}
 .header-brand{font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;letter-spacing:.5px;white-space:nowrap;}
@@ -454,6 +454,65 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
 #histArea>div:nth-child(4){animation-delay:.15s;}
 #histArea>div:nth-child(5){animation-delay:.2s;}
 
+
+/* ── DESKTOP POLISH ── */
+@media(min-width:900px){
+  .container{max-width:920px;padding:48px 40px 80px;}
+  .price-card{padding:28px 30px;}
+  .price-card .main-value{font-size:2.6rem;}
+  .price-card .badge{font-size:.6rem;margin-bottom:10px;}
+  .price-card .sub{font-size:.6rem;margin-top:8px;}
+  .custo-result{padding:24px 28px;}
+  .cr-value{font-size:2rem;}
+  .cr-label{font-size:.6rem;}
+  .res-top{padding:28px 30px 24px;}
+  .res-big-pct{font-size:3.8rem;}
+  .res-consol-val{font-size:1.7rem;}
+  .res-top-label{font-size:.6rem;}
+  .res-row{padding:14px 28px;}
+  .res-row .rr-label{font-size:.78rem;}
+  .res-row .rr-val{font-size:.85rem;}
+  .step-title{font-size:.68rem;}
+  .field label{font-size:.6rem;}
+  .field-row input,.field-row select{font-size:.92rem;padding:12px 14px;}
+  .field-prefix{padding:12px 13px;font-size:.75rem;}
+  .section-label{font-size:.62rem;letter-spacing:4px;margin-bottom:24px;}
+  .target-btn{padding:9px 18px;font-size:.74rem;}
+  .target-label{font-size:.6rem;}
+  .icms-btn{padding:10px 20px;font-size:.75rem;}
+  .divider{margin:40px 0;}
+  .step{margin-bottom:36px;}
+  .input-row{gap:14px;}
+  .resultado-card{border-radius:16px;}
+  .price-card{border-radius:16px;}
+  .custo-result{border-radius:16px;}
+  .cores-table th{font-size:.62rem;padding:12px 18px;}
+  .cores-table td{padding:12px 18px;font-size:.85rem;}
+  .hist-filters input{padding:10px 16px;font-size:.78rem;min-width:280px;}
+  .header{height:56px;padding:0 32px 0 28px;}
+  .header-brand{font-size:1.25rem;}
+  .tabs{padding:0 40px;}
+  .tab-btn{padding:16px 28px;font-size:.72rem;}
+  .footer{padding:20px 40px;}
+}
+
+/* ── WIDE DESKTOP (1200+) — 2-column layout for resultado ── */
+@media(min-width:1200px){
+  .container{max-width:1040px;}
+  .price-card .main-value{font-size:2.8rem;}
+  .res-big-pct{font-size:4.2rem;}
+}
+
+/* ── TOAST NOTIFICATION ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);z-index:10000;padding:12px 24px;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.5px;color:#fff;pointer-events:none;opacity:0;transition:transform .35s cubic-bezier(.34,1.2,.64,1),opacity .25s;box-shadow:0 6px 20px rgba(0,0,0,.3);white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{background:#008835;}
+.toast.err{background:#C0392B;}
+
+/* ── LOGOFF BUTTON ── */
+.logoff-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:50%;cursor:pointer;color:rgba(255,255,255,.7);transition:all .2s;}
+.logoff-btn:hover{background:rgba(255,255,255,.18);color:#fff;}
+
 /* ── SPLASH SCREEN ── */
 .splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s;
   background:radial-gradient(ellipse at 30% 20%,#00a040 0%,#008835 40%,#006020 100%);}
@@ -472,6 +531,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
 </head>
 <body>
 
+<div class="toast" id="toast"></div>
+
 <!-- SPLASH SCREEN -->
 <div class="splash" id="splash">
   <div class="splash-logo">
@@ -482,7 +543,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
     <div class="splash-sub">Formação de Preço</div>
   </div>
   <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
-  <div class="splash-version" id="splash-version">v3.2.0</div>
+  <div class="splash-version" id="splash-version">v3.3.0</div>
 </div>
 
 <!-- LOGIN SCREEN -->
@@ -513,9 +574,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
     </button>
   </div>
   <div class="header-right">
-    <div class="version-badge" id="app-version">v3.2.0</div>
+    <div class="version-badge" id="app-version">v3.3.0</div>
     <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
       <span class="toggle-icon" id="toggle-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg></span>
+    </button>
+    <button class="logoff-btn" onclick="logoff()" title="Sair">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
     </button>
   </div>
 </div>
@@ -899,7 +963,7 @@ onValue(multiplicadoresRef,(snapshot)=>{
   const val=snapshot.val();
   if(val){Object.keys(val).forEach(tipo=>{if(MULTIPLICADORES[tipo])MULTIPLICADORES[tipo]=Array.isArray(val[tipo])?val[tipo]:Object.values(val[tipo]);});recalcularDerivados();populaTipos();populaTingTipos();if(document.getElementById('panel-custos').classList.contains('active'))renderCustosTab();}
 });
-window._salvarMultiplicadores=()=>set(multiplicadoresRef,MULTIPLICADORES).catch(e=>console.error('Erro ao salvar multiplicadores:',e));
+window._salvarMultiplicadores=(data)=>set(multiplicadoresRef,data).then(()=>window._toast&&window._toast('Multiplicadores salvos','ok')).catch(e=>{console.error('Erro ao salvar multiplicadores:',e);window._toast&&window._toast('Erro ao salvar multiplicadores','err');});
 
 onValue(cadastroRef,(snapshot)=>{
   const raw=snapshot.val()||DEFAULT_CADASTRO;
@@ -912,12 +976,12 @@ onValue(cadastroRef,(snapshot)=>{
 onValue(custoHoraRef,(snapshot)=>{const val=snapshot.val();if(val!==null){document.getElementById('r-custoHora').value=val;calcRetorcao();}});
 onValue(custoHoraPrepRef,(snapshot)=>{const val=snapshot.val();if(val!==null){const el=document.getElementById('pp-custoHora');if(el){el.value=val;calcPreparacao();}}});
 
-window._salvarFirebase=()=>set(cadastroRef,{CO:cadastro['CO']}).catch(e=>console.error('Erro ao salvar:',e));
+window._salvarFirebase=(data)=>set(cadastroRef,data).then(()=>window._toast&&window._toast('Cadastro salvo','ok')).catch(e=>{console.error('Erro ao salvar:',e);window._toast&&window._toast('Erro ao salvar cadastro','err');});
 window._salvarCustoHora=(val)=>set(custoHoraRef,parseFloat(val)||55.12).catch(e=>console.error('Erro ao salvar custo hora:',e));
 window._salvarCustoHoraPrep=(val)=>set(custoHoraPrepRef,parseFloat(val)||38.50).catch(e=>console.error('Erro ao salvar custo hora prep:',e));
 
 window._firebaseReady=true;
-if(window._pendingSave){window._salvarFirebase();window._pendingSave=false;}
+if(window._pendingSave){window._salvarFirebase({CO:cadastro['CO']});window._pendingSave=false;}
 
 // Historico
 window._historicoData=[];
@@ -926,14 +990,14 @@ onValue(historicoRef,(snapshot)=>{
   if(val){window._historicoData=Object.entries(val).map(([k,v])=>({...v,_key:k})).sort((a,b)=>b.timestamp-a.timestamp);}else{window._historicoData=[];}
   if(typeof renderHistorico==='function')renderHistorico();
 });
-window._salvarCotacao=(dados)=>push(historicoRef,dados).catch(e=>console.error('Erro ao salvar cotação:',e));
-window._deletarCotacao=(key)=>remove(child(historicoRef,key)).catch(e=>console.error('Erro ao deletar:',e));
-window._editarCotacao=(key,dados)=>set(child(historicoRef,key),dados).catch(e=>console.error('Erro ao editar:',e));
+window._salvarCotacao=(dados)=>push(historicoRef,dados).then(()=>window._toast&&window._toast('Cotação salva','ok')).catch(e=>{console.error('Erro ao salvar cotação:',e);window._toast&&window._toast('Erro ao salvar cotação','err');});
+window._deletarCotacao=(key)=>remove(child(historicoRef,key)).then(()=>window._toast&&window._toast('Registro excluído','ok')).catch(e=>{console.error('Erro ao deletar:',e);window._toast&&window._toast('Erro ao excluir','err');});
+window._editarCotacao=(key,dados)=>set(child(historicoRef,key),dados).then(()=>window._toast&&window._toast('Cotação editada','ok')).catch(e=>{console.error('Erro ao editar:',e);window._toast&&window._toast('Erro ao editar','err');});
 </script>
 
 <!-- ── APP LOGIC ── -->
 <script>
-const APP_VERSION='v3.2.0';
+const APP_VERSION='v3.3.0';
 const ICMS_FUNDOS=0.0318,PIS_COFINS_AL=0.0925,IRPJ_RATE=0.34;
 const cenariosVenda=[{label:'ICMS 17%',pis:0.013695,cofins:0.06308,cred:0.01295},{label:'ICMS 12%',pis:0.01452,cofins:0.06688,cred:0.008325},{label:'ICMS 7%',pis:0.015345,cofins:0.07068,cred:0.0037},{label:'ICMS 4%',pis:0.01584,cofins:0.07296,cred:0.000925}];
 const cenariosServico=[{label:'Dentro do Estado',pis:0.0165,cofins:0.076,cred:0,icmsFundos:0},{label:'Fora do Estado',pis:0.01452,cofins:0.06688,cred:0.008325,icmsFundos:0.0318}];
@@ -946,6 +1010,25 @@ function loginUser(name){currentUser=name;isAdmin=false;document.getElementById(
 function loginAdmin(){currentUser='Admin';isAdmin=true;document.getElementById('loginScreen').classList.add('hide');showApp();}
 function checkAdminPass(){const pass=document.getElementById('adminPass').value;if(pass==='admin'){loginAdmin();}}
 function showApp(){document.getElementById('appHeader').style.display='';document.getElementById('appTabs').style.display='';document.getElementById('appFooter').style.display='';document.querySelectorAll('.mob-overlay,.mob-dropdown').forEach(el=>el.style.removeProperty('display'));switchTab('vendas',document.querySelector('.tab-btn'));}
+
+function logoff(){
+  currentUser='';isAdmin=false;
+  document.getElementById('appHeader').style.display='none';
+  document.getElementById('appTabs').style.display='none';
+  document.getElementById('appFooter').style.display='none';
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const ls=document.getElementById('loginScreen');
+  ls.classList.remove('hide');ls.style.display='';ls.classList.add('visible');
+  document.getElementById('adminPass').value='';
+  closeMobNav();
+}
+
+window._toast=function(msg,type){
+  const el=document.getElementById('toast');if(!el)return;
+  el.textContent=msg;el.className='toast '+(type||'ok');
+  setTimeout(()=>el.classList.add('show'),10);
+  setTimeout(()=>{el.classList.remove('show');},2800);
+};
 function canAccessTab(tab){return true;}
 
 let MULTIPLICADORES={'CV':[1.25,1.25,1.25,1.25,1.25,1.25,1.25],'CANCUN':[1.30,1.30,1.30,1.30,1.30,1.30,1.30],'PES':[1.10,0.90,0.90,0.90,0.90,0.90,0.90],'FILAMENTO':[1.20,1.00,1.00,1.00,1.00,1.00,1.00],'PAC':[0.90,0.80,0.60,0.60,0.60,0.60,0.60],'COTONCRYL':[1.10,1.50,1.80,1.80,1.80,2.00,1.80]};
@@ -955,8 +1038,8 @@ function recalcularDerivados(){const coBase=(cadastro&&cadastro['CO'])||[];Objec
 let cadastro={'CO':[{cor:'Branco',custo:6.20},{cor:'Claro',custo:8.00},{cor:'Médio',custo:9.25},{cor:'Escuro',custo:11.15},{cor:'Intensa/Especial',custo:15.00},{cor:'Preto',custo:11.20}]};
 recalcularDerivados();
 
-function salvarCadastro(){recalcularDerivados();if(window._salvarFirebase){window._salvarFirebase();}else{window._pendingSave=true;}populaTipos();populaTingTipos();}
-function salvarManual(){if(!isAdmin)return;const btn=document.getElementById('btnSalvar');if(!btn)return;btn.textContent='Salvando...';btn.classList.add('salvando');btn.classList.remove('salvo');btn.disabled=true;const done=()=>{btn.textContent='Salvo ✓';btn.classList.remove('salvando');btn.classList.add('salvo');btn.disabled=false;setTimeout(()=>{btn.textContent='Salvar alterações';btn.classList.remove('salvo');},2500);};const fail=()=>{btn.textContent='Erro';btn.classList.remove('salvando');btn.disabled=false;setTimeout(()=>{btn.textContent='Salvar alterações';},3000);};if(window._salvarFirebase){window._salvarFirebase().then(done).catch(fail);}else{window._pendingSave=true;fail();}}
+function salvarCadastro(){recalcularDerivados();if(window._salvarFirebase){window._salvarFirebase({CO:cadastro['CO']});}else{window._pendingSave=true;}populaTipos();populaTingTipos();}
+function salvarManual(){if(!isAdmin)return;const btn=document.getElementById('btnSalvar');if(!btn)return;btn.textContent='Salvando...';btn.classList.add('salvando');btn.classList.remove('salvo');btn.disabled=true;const done=()=>{btn.textContent='Salvo ✓';btn.classList.remove('salvando');btn.classList.add('salvo');btn.disabled=false;setTimeout(()=>{btn.textContent='Salvar alterações';btn.classList.remove('salvo');},2500);};const fail=()=>{btn.textContent='Erro';btn.classList.remove('salvando');btn.disabled=false;setTimeout(()=>{btn.textContent='Salvar alterações';},3000);};if(window._salvarFirebase){window._salvarFirebase({CO:cadastro['CO']}).then(done).catch(fail);}else{window._pendingSave=true;fail();}}
 function g(id){return parseFloat(document.getElementById(id).value)||0;}
 function fmtR(v){return'R$ '+Math.abs(v).toFixed(2).replace('.',',');}
 function fmtPct(v){return(v*100).toFixed(1)+'%';}
@@ -1131,7 +1214,22 @@ function calcPreparacao(){const custoHora=parseFloat(document.getElementById('pp
 
 function renderCustosTab(){const tipos=Object.keys(cadastro);if(!tipoAtivo||!cadastro[tipoAtivo])tipoAtivo=tipos[0]||null;const ordemTipos=['CO',...Object.keys(MULTIPLICADORES).filter(t=>cadastro[t])];const tiposDisponiveis=ordemTipos.filter(t=>cadastro[t]);document.getElementById('tipoTabs').innerHTML=tiposDisponiveis.length?tiposDisponiveis.map(t=>{const isDeriv=t!=='CO';const badge=isDeriv?'<span style="font-size:0.5rem;opacity:0.5;margin-left:3px">auto</span>':'';const del=!isDeriv?'<span class="del-tipo" onclick="event.stopPropagation();deletarTipo(\''+t+'\')">✕</span>':'';return'<div class="tipo-tab '+(t===tipoAtivo?'active':'')+'" onclick="selecionarTipo(\''+t+'\')">'+t+badge+del+'</div>';}).join(''):'<span style="font-size:0.75rem;color:var(--muted)">Nenhum tipo cadastrado</span>';const area=document.getElementById('coresArea');if(!tipoAtivo){area.innerHTML='<div class="empty-state">Adicione um tipo de fio para começar.</div>';return;}const isDeriv=tipoAtivo!=='CO';const cores=cadastro[tipoAtivo]||[];const coBase=cadastro['CO']||[];const mults=MULTIPLICADORES[tipoAtivo]?[...MULTIPLICADORES[tipoAtivo]]:[];if(isDeriv){area.innerHTML='<div style="margin-bottom:12px;padding:10px 16px;background:rgba(0,136,53,0.06);border:1.5px solid var(--border);border-radius:8px;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:12px"><span>Valores calculados a partir do <strong style="color:var(--accent)">CO</strong>. '+(multEditando?'<strong style="color:var(--yellow)">Editando…</strong>':'Clique no cadeado para ajustar.')+'</span><button onclick="toggleMultEdit()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;padding:2px 6px;color:'+(multEditando?'var(--yellow)':'var(--muted)')+'">'+(multEditando?'🔓':'🔒')+'</button></div><table class="cores-table"><thead><tr><th>Cor</th><th>Base CO</th><th>Mult</th><th>Calculado</th></tr></thead><tbody>'+cores.map((c,i)=>{const mult=mults[Math.min(i,mults.length-1)];const custoCO=coBase[i]?coBase[i].custo:0;const pct=(mult*100).toFixed(0);const multCell=multEditando?'<input id="mult-inp-'+i+'" type="number" value="'+pct+'" min="1" max="999" step="1" style="width:60px;padding:4px 6px;background:rgba(255,203,0,0.08);border:1.5px solid var(--yellow);border-radius:5px;color:var(--yellow);font-family:DM Mono,monospace;font-size:.78rem;outline:none;text-align:center" oninput="previewMult('+i+',this.value)">%':'<span style="font-family:DM Mono,monospace;font-size:.72rem;color:var(--yellow);background:rgba(255,203,0,0.08);padding:2px 7px;border-radius:4px">'+pct+'%</span>';return'<tr><td>'+c.cor+'</td><td style="color:var(--muted)">R$ '+custoCO.toFixed(2).replace('.',',')+'</td><td>'+multCell+'</td><td id="mult-val-'+i+'" style="font-family:DM Mono,monospace;color:var(--accent);font-weight:500">R$ '+c.custo.toFixed(2).replace('.',',')+'</td></tr>';}).join('')+'</tbody></table>';}else{area.innerHTML='<table class="cores-table"><thead><tr><th>Cor</th><th>Custo Tingimento (R$)</th><th class="td-del"></th></tr></thead><tbody>'+cores.map((c,i)=>'<tr><td><input type="text" value="'+c.cor+'" onchange="editarCor(\'CO\','+i+',\'cor\',this.value)"></td><td><input type="number" value="'+c.custo.toFixed(2)+'" step="0.01" min="0" onchange="editarCor(\'CO\','+i+',\'custo\',this.value)"></td><td class="td-del"><button class="del-btn" onclick="deletarCor(\'CO\','+i+')">✕</button></td></tr>').join('')+'</tbody></table><div style="margin-top:14px"><button class="add-btn" onclick="abrirModalCor()">+ Nova cor</button></div>';}}
 function previewMult(idx,val){const pct=parseFloat(val)||0;const mult=pct/100;const coBase=cadastro['CO']||[];const custoCO=coBase[idx]?coBase[idx].custo:0;const calc=custoCO*mult;const el=document.getElementById('mult-val-'+idx);if(el)el.textContent='R$ '+calc.toFixed(2).replace('.',',');}
-function toggleMultEdit(){if(!isAdmin)return;if(!multEditando){multEditando=true;renderCustosTab();}else{const coBase=cadastro['CO']||[];const mults=MULTIPLICADORES[tipoAtivo];coBase.forEach((_,i)=>{const inp=document.getElementById('mult-inp-'+i);if(inp){const novoMult=parseFloat(inp.value)/100;if(!isNaN(novoMult)&&novoMult>0)mults[Math.min(i,mults.length-1)]=novoMult;}});MULTIPLICADORES[tipoAtivo]=mults;multEditando=false;recalcularDerivados();if(window._salvarMultiplicadores)window._salvarMultiplicadores();salvarCadastro();renderCustosTab();populaTipos();}}
+function toggleMultEdit(){if(!isAdmin)return;
+if(!multEditando){multEditando=true;renderCustosTab();return;}
+// Collect new values from inputs
+const coBase=cadastro['CO']||[];
+const newMults=[...(MULTIPLICADORES[tipoAtivo]||[])];
+coBase.forEach((_,i)=>{
+  const inp=document.getElementById('mult-inp-'+i);
+  if(inp){const v=parseFloat(inp.value)/100;if(!isNaN(v)&&v>0)newMults[i]=v;}
+});
+MULTIPLICADORES[tipoAtivo]=newMults;
+multEditando=false;
+recalcularDerivados();
+// Save multiplicadores — deep copy to avoid reference issues
+const dataToSave={};Object.keys(MULTIPLICADORES).forEach(k=>{dataToSave[k]=[...MULTIPLICADORES[k]];});
+if(window._salvarMultiplicadores)window._salvarMultiplicadores(dataToSave);
+salvarCadastro();renderCustosTab();populaTipos();}
 function selecionarTipo(t){tipoAtivo=t;multEditando=false;renderCustosTab();}
 // Wrap renderCustosTab to enforce admin-only editing
 const _origRenderCustos=renderCustosTab;
