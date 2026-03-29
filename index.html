@@ -2277,27 +2277,27 @@ function buildCard(c) {
         '</div>'
       ).join('') +
       '<div class="comment-input-wrap">' +
-      '<input class="comment-input" id="ci-' + c._key + '" placeholder="Comentar..." onkeydown="if(event.key==='Enter')adicionarComentario('' + c._key + '')">' +
-      '<button class="comment-send" onclick="adicionarComentario('' + c._key + '')">Enviar</button>' +
+      '<input class="comment-input" id="ci-' + c._key + '" placeholder="Comentar..." onkeydown="if(event.key===\x27Enter\x27)adicionarComentario(\x27' + c._key + '\x27)">' +
+      '<button class="comment-send" onclick="adicionarComentario(\x27' + c._key + '\x27)">Enviar</button>' +
       '</div>' +
       '</div>';
   } else {
     commentsHtml = '<div class="comment-input-wrap">' +
-      '<input class="comment-input" id="ci-' + c._key + '" placeholder="Comentar..." onkeydown="if(event.key==='Enter')adicionarComentario('' + c._key + '')">' +
-      '<button class="comment-send" onclick="adicionarComentario('' + c._key + '')">Enviar</button>' +
+      '<input class="comment-input" id="ci-' + c._key + '" placeholder="Comentar..." onkeydown="if(event.key===\x27Enter\x27)adicionarComentario(\x27' + c._key + '\x27)">' +
+      '<button class="comment-send" onclick="adicionarComentario(\x27' + c._key + '\x27)">Enviar</button>' +
       '</div>';
   }
 
   // Botões admin
   const btnConcluir = state.isAdmin && c.col !== 'done'
-    ? '<button class="card-menu-btn" onclick="moverCard('' + c._key + '','done')">' + CHECK_SVG_STR + '</button>'
+    ? '<button class="card-menu-btn" onclick="moverCard(\x27' + c._key + '\x27,\x27done\x27)">' + CHECK_SVG_STR + '</button>'
     : '';
   const btnExcluir = state.isAdmin
-    ? '<button class="card-menu-btn" onclick="deletarCard('' + c._key + '')">' + CLOSE_SVG_STR + '</button>'
+    ? '<button class="card-menu-btn" onclick="deletarCard(\x27' + c._key + '\x27)">' + CLOSE_SVG_STR + '</button>'
     : '';
 
   return '<div class="kanban-card" id="card-' + c._key + '" draggable="true" ' +
-    'ondragstart="onDragStart(event,'' + c._key + '')" ' +
+    'ondragstart="onDragStart(event,\x27' + c._key + '\x27)" ' +
     'ondragend="onDragEnd(event)">' +
     '<div class="card-header">' +
       '<div class="card-badges">' + urgBadge + setorBadge + '</div>' +
@@ -2518,9 +2518,9 @@ function renderPreventiva() {
       '<td' + urgStyle + '>' + (p.proxData||'—') + '</td>' +
       '<td>' + (p.resp||'—') + '</td>' +
       '<td style="white-space:nowrap">' +
-        '<button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;margin-right:3px" title="Executar" onclick="executarPreventiva('' + key + '')">' + CHECK_SVG_STR + '</button>' +
-        '<button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;margin-right:3px" title="Editar" onclick="abrirModalPreventiva('' + key + '')">' + EDIT_SVG_STR + '</button>' +
-        '<button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" title="Deletar" onclick="deletarPreventiva('' + key + '')">' + DEL_SVG_STR + '</button>' +
+        '<button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;margin-right:3px" title="Executar" onclick="executarPreventiva(\x27' + key + '\x27)">' + CHECK_SVG_STR + '</button>' +
+        '<button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;margin-right:3px" title="Editar" onclick="abrirModalPreventiva(\x27' + key + '\x27)">' + EDIT_SVG_STR + '</button>' +
+        '<button class="btn-secondary" style="padding:5px 10px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" title="Deletar" onclick="deletarPreventiva(\x27' + key + '\x27)">' + DEL_SVG_STR + '</button>' +
       '</td>' +
     '</tr>';
   }).join('');
@@ -2883,9 +2883,9 @@ function renderMaquinas() {
           '<div class="maquina-tag">' + tag + '</div>' +
         '</div>' +
         '<div style="display:flex;gap:4px">' +
-          '<button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" title="QR Code" onclick="abrirQR('' + m._key + '','' + (m.tag || m.nome) + '')">' + QR_SVG + '</button>' +
-          '<button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" onclick="abrirModalMaquina('' + m._key + '')">' + EDIT_SVG + '</button>' +
-          '<button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarMaquina('' + m._key + '')">' + DEL_SVG + '</button>' +
+          '<button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" title="QR Code" onclick="abrirQR(\x27' + m._key + '\x27,\x27' + (m.tag || m.nome) + '\x27)">' + QR_SVG + '</button>' +
+          '<button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem" onclick="abrirModalMaquina(\x27' + m._key + '\x27)">' + EDIT_SVG + '</button>' +
+          '<button class="btn-secondary" style="padding:4px 9px;font-size:0.6rem;color:var(--red);border-color:var(--red-md)" onclick="deletarMaquina(\x27' + m._key + '\x27)">' + DEL_SVG + '</button>' +
         '</div>' +
       '</div>' +
       '<div class="maquina-body">' +
@@ -3078,41 +3078,7 @@ function exportarHistorico() {
   ].join('');
 
   const pageHtml =
-    '<!--
-================================================================================
-FIOBRAS MANUTENÇÃO — CHANGELOG
-================================================================================
-v2.5.1  27/03/2026  Login com cards clicáveis por usuário
-v2.5    27/03/2026  Notificações perdidas ao abrir app + badge urgentes no nav
-v2.4    27/03/2026  Login estilo cards (CRM), banner notif auto-hide
-v2.3    27/03/2026  Zero emojis, ícone industrial SVG
-v2.2.2  27/03/2026  Menu suspenso oculto no login (classe logged-in)
-v2.2.1  27/03/2026  Login centralizado, menu suspenso só pós-login
-v2.2    27/03/2026  Firebase Messaging SW externo (firebase-messaging-sw.js)
-v2.1    27/03/2026  FCM token + Cloudflare Worker integrado
-v2.0    27/03/2026  Botão notificação admin, popup in-app, broadcast
-v1.9    27/03/2026  Cloudflare Worker FCM + cron trigger
-v1.8    27/03/2026  Bottom nav oculto no login, ícone fábrica industrial
-v1.7    27/03/2026  Viewport fix, zoom travado no mobile
-v1.6    27/03/2026  QR Code sem CDN externo (Google Charts API)
-v1.5    27/03/2026  QR Code por máquina com impressão
-v1.4    27/03/2026  Bottom nav flutuante estilo Nubank, ícones SVG
-v1.3    27/03/2026  Splash screen + bottom navigation mobile
-v1.2    27/03/2026  Fix login: Joacir ausente, admin tabs, variável userNome
-v1.1    27/03/2026  Foto na demanda, comentários, tempo parado, exportar histórico
-v1.0    27/03/2026  Sistema de usuários (7 perfis), notificações filtradas por resp.
-v0.9    27/03/2026  Notificações FCM + Cloudflare Worker (primeira versão)
-v0.8    27/03/2026  Ordenação Kanban, banner alertas vencidas, vibração
-v0.7    27/03/2026  Viewport mobile fix
-v0.6    27/03/2026  Header reestruturado, ícone fábrica bottom nav
-v0.5    27/03/2026  Mobile CSS completo (mobile-first)
-v0.4    27/03/2026  Joacir admin, fix isAdmin
-v0.3    27/03/2026  Usuário Joacir criado
-v0.2    27/03/2026  Fix modal preventiva, botão editar
-v0.1    27/03/2026  Versão inicial — Kanban, Preventiva, Máquinas, Histórico, PWA
-================================================================================
--->
-<!DOCTYPE html><html lang="pt-BR"><head>' +
+    '<!DOCTYPE html><html lang="pt-BR"><head>' +
     '<meta charset="UTF-8">' +
     '<title>Historico Fiobras<\/title>' +
     '\u003cstyle\u003e' + css + '<\/style>' +
@@ -3211,41 +3177,7 @@ function imprimirQR() {
 
   const w = window.open('', '_blank');
   w.document.write(
-    '<!--
-================================================================================
-FIOBRAS MANUTENÇÃO — CHANGELOG
-================================================================================
-v2.5.1  27/03/2026  Login com cards clicáveis por usuário
-v2.5    27/03/2026  Notificações perdidas ao abrir app + badge urgentes no nav
-v2.4    27/03/2026  Login estilo cards (CRM), banner notif auto-hide
-v2.3    27/03/2026  Zero emojis, ícone industrial SVG
-v2.2.2  27/03/2026  Menu suspenso oculto no login (classe logged-in)
-v2.2.1  27/03/2026  Login centralizado, menu suspenso só pós-login
-v2.2    27/03/2026  Firebase Messaging SW externo (firebase-messaging-sw.js)
-v2.1    27/03/2026  FCM token + Cloudflare Worker integrado
-v2.0    27/03/2026  Botão notificação admin, popup in-app, broadcast
-v1.9    27/03/2026  Cloudflare Worker FCM + cron trigger
-v1.8    27/03/2026  Bottom nav oculto no login, ícone fábrica industrial
-v1.7    27/03/2026  Viewport fix, zoom travado no mobile
-v1.6    27/03/2026  QR Code sem CDN externo (Google Charts API)
-v1.5    27/03/2026  QR Code por máquina com impressão
-v1.4    27/03/2026  Bottom nav flutuante estilo Nubank, ícones SVG
-v1.3    27/03/2026  Splash screen + bottom navigation mobile
-v1.2    27/03/2026  Fix login: Joacir ausente, admin tabs, variável userNome
-v1.1    27/03/2026  Foto na demanda, comentários, tempo parado, exportar histórico
-v1.0    27/03/2026  Sistema de usuários (7 perfis), notificações filtradas por resp.
-v0.9    27/03/2026  Notificações FCM + Cloudflare Worker (primeira versão)
-v0.8    27/03/2026  Ordenação Kanban, banner alertas vencidas, vibração
-v0.7    27/03/2026  Viewport mobile fix
-v0.6    27/03/2026  Header reestruturado, ícone fábrica bottom nav
-v0.5    27/03/2026  Mobile CSS completo (mobile-first)
-v0.4    27/03/2026  Joacir admin, fix isAdmin
-v0.3    27/03/2026  Usuário Joacir criado
-v0.2    27/03/2026  Fix modal preventiva, botão editar
-v0.1    27/03/2026  Versão inicial — Kanban, Preventiva, Máquinas, Histórico, PWA
-================================================================================
--->
-<!DOCTYPE html><html><head>' +
+    '<!DOCTYPE html><html><head>' +
     '<title>QR Code - ' + maqNome + '</title>' +
     '\u003cstyle\u003e' +
     'body{font-family:Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#fff;}' +
